@@ -1,6 +1,6 @@
 Name: grubby
 Version: 7.0.16
-Release: 3%{?dist}
+Release: 4%{?dist}
 Summary: Command line tool for updating bootloader configs
 Group: System Environment/Base
 License: GPLv2+
@@ -12,11 +12,14 @@ Source0: %{name}-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: pkgconfig glib2-devel popt-devel 
 BuildRequires: libblkid-devel
+BuildRequires: git
 # for make test / getopt:
 BuildRequires: util-linux-ng
 %ifarch s390 s390x
 Requires: s390utils-base
 %endif
+
+Patch0: Add-uboot-support-for-ARM-712199.patch
 
 %description
 grubby  is  a command line tool for updating and displaying information about 
@@ -27,7 +30,12 @@ environment.
 
 %prep
 %setup -q
-
+git init
+git config user.email "grubby-owner@fedoraproject.org"
+git config user.name "Fedora Ninjas"
+git add .
+git commit -a -q -m "%{version} baseline."
+git am %{patches}
 
 %build
 make %{?_smp_mflags}
@@ -54,6 +62,11 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jun 09 2011 Brian C. Lane <bcl@redhat.com> - 7.0.16-4
+- Add git patch processing to spec file
+- Add uboot support for ARM
+  Resolves: rhbz#712199
+
 * Wed Feb 09 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.0.16-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 

@@ -1,6 +1,6 @@
 Name: grubby
 Version: 7.0.16
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: Command line tool for updating bootloader configs
 Group: System Environment/Base
 License: GPLv2+
@@ -17,6 +17,9 @@ BuildRequires: git
 BuildRequires: util-linux-ng
 %ifarch s390 s390x
 Requires: s390utils-base
+%endif
+%ifarch %{arm}
+Requires: uboot-tools
 %endif
 
 Patch0: Add-uboot-support-for-ARM-712199.patch
@@ -46,7 +49,10 @@ make test
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT mandir=%{_mandir}
-
+%ifarch %{arm}
+mkdir -p $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/
+install -p uboot $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/uboot
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -59,9 +65,15 @@ rm -rf $RPM_BUILD_ROOT
 /sbin/new-kernel-pkg
 /sbin/grubby
 %{_mandir}/man8/*.8*
-
+%ifarch %{arm}
+%config %{_sysconfdir}/sysconfig/uboot
+%endif
 
 %changelog
+* Thu Jun 16 2011 Dennis Gilmore <dennis@ausil.us> - 7.0.16-5
+- add uboot-tools requires on arm arches
+- add uboot config file
+
 * Thu Jun 09 2011 Brian C. Lane <bcl@redhat.com> - 7.0.16-4
 - Add git patch processing to spec file
 - Add uboot support for ARM

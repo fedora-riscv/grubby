@@ -1,0 +1,133 @@
+From 4bb88f93e6c7cf432e354a164fce8743794a84a5 Mon Sep 17 00:00:00 2001
+From: Mads Kiilerich <mads@kiilerich.com>
+Date: Thu, 8 Dec 2011 11:49:35 -0800
+Subject: [PATCH 331/331] Update "echo 'Loading..." messages to the new kernel
+ version
+
+grub2-mkconfig will create lines like:
+        echo    'Loading Linux 3.1.0-0.rc6.git0.0.fc16.x86_64 ...'
+- depending on the content of /etc/default/grub.
+
+grubby would recognize these lines and replace them with lines with the right
+version number such as:
+	echo 'Loading Fedora (3.1.0-0.rc6.git0.0.fc16.x86_64)'
+
+these lines were however not recognized by grubby and would not be updated on
+next kernel update when this entry would be used as template.
+
+With this patch grubby will no longer look for a specific title but patch any
+"echo 'Loading" line immediately before the kernel line.
+
+Signed-off-by: Adam Williamson <awilliam@redhat.com>
+---
+ grubby.c                |    5 +++--
+ test/grub2.1            |    4 ++--
+ test/results/add/g2-1.1 |    4 ++--
+ test/results/add/g2-1.2 |    4 ++--
+ test/results/add/g2-1.3 |    4 ++--
+ 5 files changed, 11 insertions(+), 10 deletions(-)
+
+diff --git a/grubby.c b/grubby.c
+index 38ca9ac..7221372 100644
+--- a/grubby.c
++++ b/grubby.c
+@@ -2960,9 +2960,10 @@ int addNewKernel(struct grubConfig * config, struct singleEntry * template,
+ 		}
+ 	    } else if (tmplLine->type == LT_ECHO) {
+ 		    requote(tmplLine, config->cfi);
++		    static const char *prefix = "'Loading ";
+ 		    if (tmplLine->numElements > 1 &&
+-			    strstr(tmplLine->elements[1].item, "'Loading Linux ")) {
+-			char *prefix = "'Loading ";
++			    strstr(tmplLine->elements[1].item, prefix) &&
++			    masterLine->next && masterLine->next->type == LT_KERNEL) {
+ 			char *newTitle = malloc(strlen(prefix) +
+ 						strlen(newKernelTitle) + 2);
+ 
+diff --git a/test/grub2.1 b/test/grub2.1
+index 242983c..fcf053a 100644
+--- a/test/grub2.1
++++ b/test/grub2.1
+@@ -36,14 +36,14 @@ set timeout=5
+ ### END /etc/grub.d/00_header ###
+ 
+ ### BEGIN /etc/grub.d/10_linux ###
+-menuentry 'Linux, with Linux 2.6.38.8-32.fc15.x86_64' --class gnu-linux --class gnu --class os {
++menuentry 'Linux, with Fedora 2.6.38.8-32.fc15.x86_64' --class gnu-linux --class gnu --class os {
+ 	load_video
+ 	set gfxpayload=keep
+ 	insmod part_msdos
+ 	insmod ext2
+ 	set root='(hd0,msdos1)'
+ 	search --no-floppy --fs-uuid --set=root df0170c9-7d05-415c-bbd1-d4d503ba0eed
+-	echo	'Loading Linux 2.6.38.8-32.fc15.x86_64 ...'
++	echo	'Loading Fedora 2.6.38.8-32.fc15.x86_64 ...'
+ 	linux	/vmlinuz-2.6.38.8-32.fc15.x86_64 root=/dev/mapper/vg_pjones5-lv_root ro quiet rhgb
+ 	echo	'Loading initial ramdisk ...'
+ 	initrd	/initramfs-2.6.38.8-32.fc15.x86_64.img
+diff --git a/test/results/add/g2-1.1 b/test/results/add/g2-1.1
+index a08d01d..ea17971 100644
+--- a/test/results/add/g2-1.1
++++ b/test/results/add/g2-1.1
+@@ -48,14 +48,14 @@ menuentry 'title' --class gnu-linux --class gnu --class os {
+ 	echo 'Loading initial ramdisk ...'
+ 	initrd	/new-initrd
+ }
+-menuentry 'Linux, with Linux 2.6.38.8-32.fc15.x86_64' --class gnu-linux --class gnu --class os {
++menuentry 'Linux, with Fedora 2.6.38.8-32.fc15.x86_64' --class gnu-linux --class gnu --class os {
+ 	load_video
+ 	set gfxpayload=keep
+ 	insmod part_msdos
+ 	insmod ext2
+ 	set root='(hd0,msdos1)'
+ 	search --no-floppy --fs-uuid --set=root df0170c9-7d05-415c-bbd1-d4d503ba0eed
+-	echo	'Loading Linux 2.6.38.8-32.fc15.x86_64 ...'
++	echo	'Loading Fedora 2.6.38.8-32.fc15.x86_64 ...'
+ 	linux	/vmlinuz-2.6.38.8-32.fc15.x86_64 root=/dev/mapper/vg_pjones5-lv_root ro quiet rhgb
+ 	echo	'Loading initial ramdisk ...'
+ 	initrd	/initramfs-2.6.38.8-32.fc15.x86_64.img
+diff --git a/test/results/add/g2-1.2 b/test/results/add/g2-1.2
+index 9797b78..b1e96c6 100644
+--- a/test/results/add/g2-1.2
++++ b/test/results/add/g2-1.2
+@@ -48,14 +48,14 @@ menuentry 'title' --class gnu-linux --class gnu --class os {
+ 	echo 'Loading initial ramdisk ...'
+ 	initrd	/new-initrd
+ }
+-menuentry 'Linux, with Linux 2.6.38.8-32.fc15.x86_64' --class gnu-linux --class gnu --class os {
++menuentry 'Linux, with Fedora 2.6.38.8-32.fc15.x86_64' --class gnu-linux --class gnu --class os {
+ 	load_video
+ 	set gfxpayload=keep
+ 	insmod part_msdos
+ 	insmod ext2
+ 	set root='(hd0,msdos1)'
+ 	search --no-floppy --fs-uuid --set=root df0170c9-7d05-415c-bbd1-d4d503ba0eed
+-	echo	'Loading Linux 2.6.38.8-32.fc15.x86_64 ...'
++	echo	'Loading Fedora 2.6.38.8-32.fc15.x86_64 ...'
+ 	linux	/vmlinuz-2.6.38.8-32.fc15.x86_64 root=/dev/mapper/vg_pjones5-lv_root ro quiet rhgb
+ 	echo	'Loading initial ramdisk ...'
+ 	initrd	/initramfs-2.6.38.8-32.fc15.x86_64.img
+diff --git a/test/results/add/g2-1.3 b/test/results/add/g2-1.3
+index 89f01ee..8c3a2f6 100644
+--- a/test/results/add/g2-1.3
++++ b/test/results/add/g2-1.3
+@@ -47,14 +47,14 @@ menuentry 'title' --class gnu-linux --class gnu --class os {
+ 	linux	/new-kernel.img root=/dev/mapper/vg_pjones5-lv_root ro quiet rhgb
+ 	echo 'Loading initial ramdisk ...'
+ }
+-menuentry 'Linux, with Linux 2.6.38.8-32.fc15.x86_64' --class gnu-linux --class gnu --class os {
++menuentry 'Linux, with Fedora 2.6.38.8-32.fc15.x86_64' --class gnu-linux --class gnu --class os {
+ 	load_video
+ 	set gfxpayload=keep
+ 	insmod part_msdos
+ 	insmod ext2
+ 	set root='(hd0,msdos1)'
+ 	search --no-floppy --fs-uuid --set=root df0170c9-7d05-415c-bbd1-d4d503ba0eed
+-	echo	'Loading Linux 2.6.38.8-32.fc15.x86_64 ...'
++	echo	'Loading Fedora 2.6.38.8-32.fc15.x86_64 ...'
+ 	linux	/vmlinuz-2.6.38.8-32.fc15.x86_64 root=/dev/mapper/vg_pjones5-lv_root ro quiet rhgb
+ 	echo	'Loading initial ramdisk ...'
+ 	initrd	/initramfs-2.6.38.8-32.fc15.x86_64.img
+-- 
+1.7.7.4
+

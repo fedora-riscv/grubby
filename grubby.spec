@@ -10,7 +10,7 @@ URL: http://git.fedorahosted.org/git/grubby.git
 # git archive --format=tar --prefix=grubby-%{version}/ HEAD |bzip2 > grubby-%{version}.tar.bz2
 Source0: %{name}-%{version}.tar.bz2
 # 'upstream' 4bb88f93e6c7cf432e354a164fce8743794a84a5
-# RH #737203
+# RH #732654
 Patch0: 0001-Update-echo-Loading.-messages-to-the-new-kernel-vers.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: pkgconfig glib2-devel popt-devel 
@@ -60,7 +60,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Thu Dec 08 2011 Adam Williamson <awilliam@redhat.com> - 8.3-2
 - fix the Loading... message when installing a new kernel
-  Resolves: rhbz#737203
+  Resolves: rhbz#732654
 
 * Thu Sep 29 2011 Peter Jones <pjones@redhat.com> - 8.3-1
 - Fix new-kernel-pkg invocation of grubby for grub (patch from Mads Kiilerich)

@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.8
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Command line tool for updating bootloader configs
 Group: System Environment/Base
 License: GPLv2+
@@ -11,7 +11,6 @@ URL: http://git.fedorahosted.org/git/grubby.git
 Source0: %{name}-%{version}.tar.bz2
 # 'upstream' 4bb88f93e6c7cf432e354a164fce8743794a84a5
 # RH #732654
-Patch0: 0001-Update-echo-Loading.-messages-to-the-new-kernel-vers.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: pkgconfig glib2-devel popt-devel 
 BuildRequires: libblkid-devel
@@ -30,8 +29,6 @@ environment.
 
 %prep
 %setup -q
-%patch0 -p1
-
 
 %build
 make %{?_smp_mflags}
@@ -58,6 +55,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Dec 20 2011 Peter Jones <pjones@redhat.com> - 8.8-2
+- Fix extra %%patch
+
 * Tue Dec 20 2011 Peter Jones <pjones@redhat.com> - 8.8-1
 - Fix test cases from 8.7 to work on a system without /boot mounted.
 

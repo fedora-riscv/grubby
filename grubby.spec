@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 7%{?dist}
+Release: 8%{?dist}
 Summary: Command line tool for updating bootloader configs
 Group: System Environment/Base
 License: GPLv2+
@@ -10,6 +10,9 @@ URL: https://github.com/rhinstaller/grubby
 # git archive --format=tar --prefix=grubby-%%{version}/ HEAD |bzip2 > grubby-%%{version}.tar.bz2
 # Source0: %%{name}-%%{version}.tar.bz2
 Source0: https://github.com/rhboot/grubby/archive/%{version}-1.tar.gz
+Patch2: 0001-Change-return-type-in-getRootSpecifier.patch
+Patch3: 0002-Add-btrfs-subvolume-support-for-grub2.patch
+Patch4: 0003-Add-tests-for-btrfs-support.patch
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires: pkgconfig glib2-devel popt-devel 
@@ -81,6 +84,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %changelog
+* Wed Mar 21 2018 Nathaniel McCallum <npmccallum@redhat.com> - 8.40-8
+- Add support for /boot on btrfs subvolumes
+
 * Tue Sep 12 2017 Peter Jones <pjones@redhat.com> - 8.40-7
 - Explicitly require grub2-tools on platforms that need grub2-editenv
 - Minor packaging cleanups

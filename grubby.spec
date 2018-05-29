@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 12%{?dist}
+Release: 13%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -13,6 +13,7 @@ Patch1: drop-uboot-uImage-creation.patch
 Patch2: 0001-Change-return-type-in-getRootSpecifier.patch
 Patch3: 0002-Add-btrfs-subvolume-support-for-grub2.patch
 Patch4: 0003-Add-tests-for-btrfs-support.patch
+Patch5: 0004-Use-system-LDFLAGS.patch
 
 BuildRequires: pkgconfig glib2-devel popt-devel 
 BuildRequires: libblkid-devel git-core
@@ -71,6 +72,9 @@ fi
 %{_mandir}/man8/*.8*
 
 %changelog
+* Tue May 29 2018 Rafael dos Santos <rdossant@redhat.com> - 8.40-13
+- Use standard Fedora linker flags (rhbz#1543502)
+
 * Tue Apr 10 2018 Javier Martinez Canillas <javierm@redhat.com> - 8.40-12
 - Use .rpmsave as backup suffix when switching to BLS configuration
 

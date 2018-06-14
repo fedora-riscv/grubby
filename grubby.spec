@@ -60,7 +60,14 @@ make install DESTDIR=$RPM_BUILD_ROOT mandir=%{_mandir}
 
 %postun
 if [ "$1" = 0 ] ; then
-    grub2-switch-to-blscfg --backup-suffix=.rpmsave &>/dev/null || :
+    arch=$(uname -m)
+    if [[ $arch == "s390x" ]]; then
+        command=zipl-switch-to-blscfg
+    else
+        command=grub2-switch-to-blscfg
+    fi
+
+    $command --backup-suffix=.rpmsave &>/dev/null || :
 fi
 
 %files
@@ -72,8 +79,9 @@ fi
 %{_mandir}/man8/*.8*
 
 %changelog
-* Tue May 29 2018 Rafael dos Santos <rdossant@redhat.com> - 8.40-13
-- Use standard Fedora linker flags (rhbz#1543502)
+* Thu Jun 14 2018 Peter Jones <pjones@redhat.com> - 8.40-13
+- Use standard Fedora linker flags (rhbz#1543502) (rdossant)
+- Switch zipl config to BLS configuration on %%postun for s390x (javierm)
 
 * Tue Apr 10 2018 Javier Martinez Canillas <javierm@redhat.com> - 8.40-12
 - Use .rpmsave as backup suffix when switching to BLS configuration

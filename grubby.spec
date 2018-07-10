@@ -4,6 +4,9 @@ Release: 15%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
+Obsoletes: %{name} <= 8.40-14
+Obsoletes: %{name}-bls <= 8.40-14
+
 # we only pull git snaps at the moment
 # git clone git@github.com:rhinstaller/grubby.git
 # git archive --format=tar --prefix=grubby-%%{version}/ HEAD |bzip2 > grubby-%%{version}.tar.bz2
@@ -15,6 +18,7 @@ Patch2: 0001-Change-return-type-in-getRootSpecifier.patch
 Patch3: 0002-Add-btrfs-subvolume-support-for-grub2.patch
 Patch4: 0003-Add-tests-for-btrfs-support.patch
 Patch5: 0004-Use-system-LDFLAGS.patch
+Patch6: 0004-Honor-sbindir.patch
 
 BuildRequires: pkgconfig glib2-devel popt-devel 
 BuildRequires: libblkid-devel git-core
@@ -59,30 +63,21 @@ make test
 %endif
 
 %install
-make install DESTDIR=$RPM_BUILD_ROOT mandir=%{_mandir}
+make install DESTDIR=$RPM_BUILD_ROOT mandir=%{_mandir} sbindir=%{_sbindir}
 
-rm %{buildroot}/sbin/installkernel
-rm %{buildroot}/sbin/new-kernel-pkg
-cp %{SOURCE1} %{buildroot}/sbin/grubby
+rm %{buildroot}%{_sbindir}/installkernel
+rm %{buildroot}%{_sbindir}/new-kernel-pkg
+cp %{SOURCE1} %{buildroot}%{_sbindir}/grubby
 
-%package bls
-Summary:	Command line tool for updating BootLoaderSpec files
-Obsoletes:	%{name} < 8.40-15
-BuildArch:	noarch
-
-%description bls
-This package provides a grubby wrapper that manages BootLoaderSpec files and is
-meant to only be used for legacy compatibility users with existing grubby users.
-
-%files bls
+%files
 %{!?_licensedir:%global license %%doc}
 %license COPYING
-/sbin/grubby
+%{_sbindir}/grubby
 %{_mandir}/man8/*.8*
 
 %changelog
-* Fri Jul 13 2018 Javier Martinez Canillas <javierm@redhat.com> - 8.40-15
-- Add a grubby-bls package that contains grubby-bls script and obsoletes grubby
+* Wed Jul 18 2018 Peter Jones <pjones@redhat.com> - 8.40-15
+- Move grubby-bls to grubby and obsolete the old grubby package
 
 * Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 8.40-14
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild

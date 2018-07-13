@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 13%{?dist}
+Release: 14%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -79,6 +79,9 @@ fi
 %{_mandir}/man8/*.8*
 
 %changelog
+* Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 8.40-14
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
+
 * Thu Jun 14 2018 Peter Jones <pjones@redhat.com> - 8.40-13
 - Use standard Fedora linker flags (rhbz#1543502) (rdossant)
 - Switch zipl config to BLS configuration on %%postun for s390x (javierm)

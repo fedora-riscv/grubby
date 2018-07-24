@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 16%{?dist}
+Release: 17%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -67,7 +67,7 @@ make install DESTDIR=$RPM_BUILD_ROOT mandir=%{_mandir} sbindir=%{_sbindir}
 mkdir -p %{buildroot}%{_libexecdir}/grubby/ %{buildroot}%{_sbindir}/
 mv -v %{buildroot}%{_sbindir}/grubby %{buildroot}%{_libexecdir}/grubby/grubby
 cp -v %{SOURCE1} %{buildroot}%{_libexecdir}/grubby/
-sed -e "s,@@LIBEXECDIR@@,%{_libexecdir},g" %{SOURCE2} \
+sed -e "s,@@LIBEXECDIR@@,%{_libexecdir}/grubby,g" %{SOURCE2} \
 	> %{buildroot}%{_sbindir}/grubby
 
 %package bls
@@ -98,6 +98,10 @@ meant to only be used for legacy compatibility users with existing grubby users.
 %{_mandir}/man8/*.8*
 
 %changelog
+* Tue Jul 24 2018 Javier Martinez Canillas <javierm@redhat.com> - 8.40-17
+- Fix grubby wrapper paths
+  Resolves: rhbz#1607981
+
 * Tue Jul 24 2018 Peter Jones <pjones@redhat.com> - 8.40-16
 - Fix permissions on /usr/sbin/grubby
 

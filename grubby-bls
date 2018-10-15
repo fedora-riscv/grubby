@@ -188,6 +188,10 @@ param_to_indexes() {
 display_info_values() {
     local indexes=($(param_to_indexes "$1"))
 
+    if [[ $indexes = "-1" ]]; then
+        print_error "The param $1 is incorrect"
+    fi
+
     for i in ${indexes[*]}; do
         echo "index=$i"
         echo "kernel=${bls_linux[$i]}"
@@ -358,6 +362,10 @@ update_bls_fragment() {
     local add_args=$1 && shift
     local initrd=$1 && shift
 
+    if [[ $indexes = "-1" ]]; then
+        print_error "The param $1 is incorrect"
+    fi
+
     for i in ${indexes[*]}; do
 	if [[ -n $remove_args || -n $add_args ]]; then
             local new_args="$(update_args "${bls_options[$i]}" "${remove_args}" "${add_args}")"
@@ -374,6 +382,10 @@ update_bls_fragment() {
 
 set_default_bls() {
     local index=($(param_to_indexes "$1"))
+
+    if [[ $index = "-1" ]]; then
+        print_error "The param $1 is incorrect"
+    fi
 
     if [[ $bootloader = grub2 ]]; then
         grub2-editenv "${env}" set saved_entry="${bls_id[$index]}"

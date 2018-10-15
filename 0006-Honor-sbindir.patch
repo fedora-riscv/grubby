@@ -1,7 +1,7 @@
-From a56df998177574ef2db332220c15f11bccd98f7e Mon Sep 17 00:00:00 2001
+From db200499551e386e7616c621fcbd69e350081664 Mon Sep 17 00:00:00 2001
 From: Peter Jones <pjones@redhat.com>
 Date: Wed, 18 Jul 2018 13:41:02 -0400
-Subject: [PATCH] Honor sbindir
+Subject: [PATCH 6/8] Honor sbindir
 
 Signed-off-by: Peter Jones <pjones@redhat.com>
 ---
@@ -9,7 +9,7 @@ Signed-off-by: Peter Jones <pjones@redhat.com>
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index ac144046133..2b18dd6404b 100644
+index f0d13720db5..cfa8e0d60ab 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -42,14 +42,14 @@ test: all

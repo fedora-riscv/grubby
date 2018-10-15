@@ -1,7 +1,7 @@
-From 3689d4cebedf115e41c192bf034b6f86fcb80acb Mon Sep 17 00:00:00 2001
+From aa4472dbc10f3d669e24ac07293d7ac19e606866 Mon Sep 17 00:00:00 2001
 From: Dennis Gilmore <dennis@ausil.us>
 Date: Wed, 30 Aug 2017 14:03:45 -0500
-Subject: [PATCH] remove the old crufty u-boot support
+Subject: [PATCH 1/8] remove the old crufty u-boot support
 
 Fedora has only supported extlinux.conf for a few releases now
 as a result it should be the only way we boot systems. Remove
@@ -9,13 +9,13 @@ the no longer needed uboot file
 
 Signed-off-by: Dennis Gilmore <dennis@ausil.us>
 ---
- new-kernel-pkg | 116 ---------------------------------------------------------
- uboot          |  43 ---------------------
+ new-kernel-pkg | 116 -------------------------------------------------
+ uboot          |  43 ------------------
  2 files changed, 159 deletions(-)
  delete mode 100644 uboot
 
 diff --git a/new-kernel-pkg b/new-kernel-pkg
-index 64225de..0fe6caa 100755
+index b634388a83f..962008e3c9d 100755
 --- a/new-kernel-pkg
 +++ b/new-kernel-pkg
 @@ -37,7 +37,6 @@ else
@@ -48,7 +48,7 @@ index 64225de..0fe6caa 100755
      mounted=""
      liloFlag=""
      isx86=""
-@@ -386,53 +377,6 @@ remove() {
+@@ -382,53 +373,6 @@ remove() {
  	[ -n "$verbose" ] && echo "$liloConfig does not exist, not running grubby"
      fi
  
@@ -102,7 +102,7 @@ index 64225de..0fe6caa 100755
      if [ -n "$cfgExtlinux" ]; then
  	[ -n "$verbose" ] && echo "removing $version from $extlinuxConfig"
  	$grubby --extlinux -c $extlinuxConfig \
-@@ -534,36 +478,6 @@ update() {
+@@ -530,36 +474,6 @@ update() {
  	[ -n "$verbose" ] && echo "$liloConfig does not exist, not running grubby"
      fi
  
@@ -139,7 +139,7 @@ index 64225de..0fe6caa 100755
      if [ -n "$cfgExtlinux" ]; then
  	[ -n "$verbose" ] && echo "updating $version from $extlinuxConfig"
  	ARGS="--extlinux -c $extlinuxConfig --update-kernel=$kernelImage \
-@@ -874,33 +788,6 @@ fi
+@@ -877,33 +791,6 @@ fi
  [ -n "$liloConfig" ] && [ -f "$liloConfig" ] && cfgLilo=1;
  [ -n "$extlinuxConfig" ] && [ -f "$extlinuxConfig" ] && cfgExtlinux=1;
  
@@ -183,7 +183,7 @@ index 64225de..0fe6caa 100755
  exit 0
 diff --git a/uboot b/uboot
 deleted file mode 100644
-index 07d8671..0000000
+index 07d8671822f..00000000000
 --- a/uboot
 +++ /dev/null
 @@ -1,43 +0,0 @@
@@ -230,3 +230,6 @@ index 07d8671..0000000
 -
 -# option to tell new-kernel-pkg a specific dtb file to load in extlinux.conf
 -#dtbfile=foo.dtb
+-- 
+2.17.1
+

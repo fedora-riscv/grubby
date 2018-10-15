@@ -1,14 +1,14 @@
-From fbc4d4feef66df7224fde64adae95525e73bf141 Mon Sep 17 00:00:00 2001
+From e08c858af4d2b09e62441560f3ccecc9e750c87a Mon Sep 17 00:00:00 2001
 From: Rafael dos Santos <rdossant@redhat.com>
 Date: Tue, 29 May 2018 15:15:24 +0200
-Subject: [PATCH] Use system LDFLAGS
+Subject: [PATCH 5/8] Use system LDFLAGS
 
 ---
  Makefile | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/Makefile b/Makefile
-index ac14404..f0d1372 100644
+index ac144046133..f0d13720db5 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -25,7 +25,7 @@ OBJECTS = grubby.o log.o
@@ -21,5 +21,5 @@ index ac14404..f0d1372 100644
  grubby_LIBS = -lblkid -lpopt
  
 -- 
-2.17.0
+2.17.1
 

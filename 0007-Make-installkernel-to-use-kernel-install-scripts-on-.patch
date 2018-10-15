@@ -1,7 +1,7 @@
-From f93a35be5bdec17044dd2a17980689d3cbf73d58 Mon Sep 17 00:00:00 2001
+From fa1bf7b54cb71fa193da16ffc404f8535d7d16ac Mon Sep 17 00:00:00 2001
 From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Tue, 31 Jul 2018 17:43:53 +0200
-Subject: [PATCH] Make installkernel to use kernel-install scripts on BLS
+Subject: [PATCH 7/8] Make installkernel to use kernel-install scripts on BLS
  configuration
 
 The kernel make install target executes the arch/$ARCH/boot/install.sh

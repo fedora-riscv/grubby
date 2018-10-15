@@ -13,13 +13,13 @@ Source1: grubby-bls
 Source2: grubby.in
 Source3: installkernel.in
 Source4: installkernel-bls
-Patch1: drop-uboot-uImage-creation.patch
-Patch2: 0001-Change-return-type-in-getRootSpecifier.patch
-Patch3: 0002-Add-btrfs-subvolume-support-for-grub2.patch
-Patch4: 0003-Add-tests-for-btrfs-support.patch
-Patch5: 0004-Use-system-LDFLAGS.patch
-Patch6: 0004-Honor-sbindir.patch
-Patch7: 0005-installkernel-use-kernel-install.patch
+Patch0001: 0001-remove-the-old-crufty-u-boot-support.patch
+Patch0002: 0002-Change-return-type-in-getRootSpecifier.patch
+Patch0003: 0003-Add-btrfs-subvolume-support-for-grub2.patch
+Patch0004: 0004-Add-tests-for-btrfs-support.patch
+Patch0005: 0005-Use-system-LDFLAGS.patch
+Patch0006: 0006-Honor-sbindir.patch
+Patch0007: 0007-Make-installkernel-to-use-kernel-install-scripts-on-.patch
 
 BuildRequires: gcc
 BuildRequires: pkgconfig glib2-devel popt-devel 

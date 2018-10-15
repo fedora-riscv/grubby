@@ -1,7 +1,7 @@
-From 5dec033b19bb5b07a0a136a7357e16c8ca9f5dd6 Mon Sep 17 00:00:00 2001
+From 112b6e5fc690b2a73b6ad8c92dc4645db08503b6 Mon Sep 17 00:00:00 2001
 From: Nathaniel McCallum <npmccallum@redhat.com>
 Date: Fri, 2 Mar 2018 08:40:18 -0500
-Subject: [PATCH 2/3] Add btrfs subvolume support for grub2
+Subject: [PATCH 3/8] Add btrfs subvolume support for grub2
 
 In order to find the subvolume prefix from a given path, we parse
 /proc/mounts. In cases where /proc/mounts doesn't contain the
@@ -12,11 +12,11 @@ Btrfs subvolumes are already supported by grub2 and by grub2-mkconfig.
 
 Fixes #22
 ---
- grubby.c | 148 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++---
+ grubby.c | 148 +++++++++++++++++++++++++++++++++++++++++++++++++++++--
  1 file changed, 143 insertions(+), 5 deletions(-)
 
 diff --git a/grubby.c b/grubby.c
-index a062ef8..96d252a 100644
+index a062ef8e567..96d252a0a83 100644
 --- a/grubby.c
 +++ b/grubby.c
 @@ -68,6 +68,8 @@ int isEfi = 0;
@@ -205,5 +205,5 @@ index a062ef8..96d252a 100644
  	    _("don't sanity check images in boot entries (for testing only)"), 
  	    NULL },
 -- 
-2.14.3
+2.17.1
 

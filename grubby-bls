@@ -376,7 +376,7 @@ set_default_bls() {
     local index=($(param_to_indexes "$1"))
 
     if [[ $bootloader = grub2 ]]; then
-        grub2-editenv "${env}" set saved_entry="${bls_title[$index]}"
+        grub2-editenv "${env}" set saved_entry="${bls_id[$index]}"
     else
         local default="${bls_version[$index]}"
         local current="$(grep '^default=' ${zipl_config} | sed -e 's/^default=//')"

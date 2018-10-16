@@ -367,6 +367,17 @@ update_args() {
     echo ${args}
 }
 
+get_bls_args() {
+    if [[ $bootloader = "grub2" && "${bls_options[$i]}" = "\$kernelopts" ]]; then
+        old_args=$(grub2-editenv list | grep kernelopts)
+        old_args="${old_args##kernelopts=}"
+    else
+        old_args="${bls_options[$i]}"
+    fi
+
+    echo ${old_args}
+}
+
 update_bls_fragment() {
     local indexes=($(param_to_indexes "$1")) && shift
     local remove_args=$1 && shift
@@ -379,7 +390,8 @@ update_bls_fragment() {
 
     for i in ${indexes[*]}; do
 	if [[ -n $remove_args || -n $add_args ]]; then
-            local new_args="$(update_args "${bls_options[$i]}" "${remove_args}" "${add_args}")"
+            local old_args="$(get_bls_args "$i")"
+            local new_args="$(update_args "${old_args}" "${remove_args}" "${add_args}")"
             set_bls_value "${bls_file[$i]}" "options" "${new_args}"
 	fi
 

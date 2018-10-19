@@ -317,13 +317,12 @@ add_bls_fragment() {
     fi
 
     if [[ $MAKEDEBUG = "yes" ]]; then
-        arch="$(uname -m)"
-        bls_debug="$(echo ${bls_target} | sed -e "s/\.${arch}/-debug.${arch}/")"
+        bls_debug="$(echo ${bls_target} | sed -e "s/${kernelver}/${kernelver}~debug/")"
         cp -aT  "${bls_target}" "${bls_debug}"
         append_bls_value "${bls_debug}" "title" "${LINUX_DEBUG_TITLE_POSTFIX}"
         append_bls_value "${bls_debug}" "version" "${LINUX_DEBUG_VERSION_POSTFIX}"
         append_bls_value "${bls_debug}" "options" "${CMDLINE_LINUX_DEBUG}"
-        blsid="$(get_bls_value ${bls_debug} "id" | sed -e "s/\.${arch}/-debug.${arch}/")"
+        blsid="$(get_bls_value ${bls_debug} "id" | sed -e "s/${kernelver}/${kernelver}~debug/")"
         set_bls_value "${bls_debug}" "id" "${blsid}"
     fi
 

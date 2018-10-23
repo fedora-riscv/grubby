@@ -76,21 +76,32 @@ append_bls_value() {
     local key="$1" && shift
     local value="$1" && shift
 
-    old_value="$(get_bls_value ${bls} ${key})"
+    old_value="$(get_bls_value "${bls}" ${key})"
     set_bls_value "${bls}" "${key}" "${old_value}${value}"
 }
 
 get_bls_values() {
     count=0
-    for bls in $(ls -vr ${blsdir}/*.conf 2> /dev/null); do
-        bls_file[$count]="${bls}"
-        bls_title[$count]="$(get_bls_value ${bls} title)"
-        bls_version[$count]="$(get_bls_value ${bls} version)"
-        bls_linux[$count]="$(get_bls_value ${bls} linux)"
-        bls_initrd[$count]="$(get_bls_value ${bls} initrd)"
-        bls_options[$count]="$(get_bls_value ${bls} options)"
-        bls_id[$count]="${bls%.conf}"
-        bls_id[$count]="${bls_id[$count]##*/}"
+    local -a files
+    local IFS=$'\n'
+    files=($(for bls in ${blsdir}/*.conf ; do
+        if ! [[ -e "${bls}" ]] ; then
+            continue
+        fi
+        bls="${bls%.conf}"
+        bls="${bls##*/}"
+        echo "${bls}"
+    done | /usr/libexec/grubby/rpm-sort -c rpmnvrcmp | tac)) || :
+
+    for bls in "${files[@]}" ; do
+        blspath="${blsdir}/${bls}.conf"
+        bls_file[$count]="${blspath}"
+        bls_title[$count]="$(get_bls_value ${blspath} title)"
+        bls_version[$count]="$(get_bls_value ${blspath} version)"
+        bls_linux[$count]="$(get_bls_value ${blspath} linux)"
+        bls_initrd[$count]="$(get_bls_value ${blspath} initrd)"
+        bls_options[$count]="$(get_bls_value ${blspath} options)"
+        bls_id[$count]="${bls}"
 
         count=$((count+1))
     done
@@ -194,10 +205,10 @@ display_info_values() {
 
     for i in ${indexes[*]}; do
         echo "index=$i"
-        echo "kernel=${bls_linux[$i]}"
+        echo "kernel=\"${bls_linux[$i]}\""
         echo "args=\"${bls_options[$i]}\""
-        echo "initrd=${bls_initrd[$i]}"
-        echo "title=${bls_title[$i]}"
+        echo "initrd=\"${bls_initrd[$i]}\""
+        echo "title=\"${bls_title[$i]}\""
         echo "id=\"${bls_id[$i]}\""
     done
     exit 0
@@ -239,7 +250,7 @@ remove_bls_fragment() {
 	print_error "The param $1 is incorrect"
     fi
 
-    for i in ${indexes[*]}; do
+    for i in "${indexes[@]}"; do
         rm -f "${bls_file[$i]}"
     done
 

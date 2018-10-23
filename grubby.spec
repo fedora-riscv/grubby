@@ -20,12 +20,14 @@ Patch0004: 0004-Add-tests-for-btrfs-support.patch
 Patch0005: 0005-Use-system-LDFLAGS.patch
 Patch0006: 0006-Honor-sbindir.patch
 Patch0007: 0007-Make-installkernel-to-use-kernel-install-scripts-on-.patch
+Patch0008: 0008-Add-usr-libexec-rpm-sort.patch
 
 BuildRequires: gcc
 BuildRequires: pkgconfig glib2-devel popt-devel 
 BuildRequires: libblkid-devel git-core sed make
 # for make test / getopt:
 BuildRequires: util-linux-ng
+BuildRequires: rpm-devel
 %ifarch aarch64 i686 x86_64 %{power64}
 BuildRequires: grub2-tools-minimal
 Requires: grub2-tools-minimal
@@ -34,6 +36,7 @@ Requires: grub2-tools
 %ifarch s390 s390x
 Requires: s390utils-base
 %endif
+Requires: findutils
 
 %description
 This package provides a grubby compatibility script that manages
@@ -61,7 +64,7 @@ make test
 %endif
 
 %install
-make install DESTDIR=$RPM_BUILD_ROOT mandir=%{_mandir} sbindir=%{_sbindir}
+make install DESTDIR=$RPM_BUILD_ROOT mandir=%{_mandir} sbindir=%{_sbindir} libexecdir=%{_libexecdir}
 
 mkdir -p %{buildroot}%{_libexecdir}/{grubby,installkernel}/ %{buildroot}%{_sbindir}/
 mv -v %{buildroot}%{_sbindir}/grubby %{buildroot}%{_libexecdir}/grubby/grubby
@@ -93,6 +96,7 @@ current boot environment.
 %dir %{_libexecdir}/grubby
 %dir %{_libexecdir}/installkernel
 %attr(0755,root,root) %{_libexecdir}/grubby/grubby-bls
+%attr(0755,root,root) %{_libexecdir}/grubby/rpm-sort
 %attr(0755,root,root) %{_sbindir}/grubby
 %attr(0755,root,root) %{_libexecdir}/installkernel/installkernel-bls
 %attr(0755,root,root) %{_sbindir}/installkernel

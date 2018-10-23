@@ -115,6 +115,43 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Tue Oct 23 2018 Javier Martinez Canillas <javierm@redhat.com>
+- Make the temporary config wrapper be what "grubby" contains, and put
+  traditional grubby in grubby-deprecated (pjones)
+- Re-enable debuginfo generation (pjones)
+  Related: rhbz#1619344
+- Install installkernel-bls here as well, not just in the grub2 package,
+  since s390x doesn't have grubby packages (pjones)
+  Related: rhbz#1619344
+- Make grubby-bls execute grub2-mkconfig on ppc64
+  Resolves: rhbz#1636039
+- grubby-bls should only check if kernel exists and not if was installed
+  Resolves: rhbz#1634740
+- Use ! instead of , as sed delimiter in grubby-bls script
+  Resolves: rhbz#1634744
+- Print information about the entry set as default
+  Resolves: rhbz#1636180
+- grubby-bls: make "id" be the filename, and include it in --info=ALL (pjones)
+  Related: rhbz#1638103
+- grubby-bls: Make grubby-bls sort everything the same way grub2 does (pjones)
+  Resolves: rhbz#1638103
+- grubby-bls: Consistently use the filename as the bls id
+  Related: rhbz#1638103
+- grubby-bls: check if entry exists before attempting to print its info
+  Resolves: rhbz#1634712
+- grubby-bls: make a copy of the cmdline if is modified for an entry
+  Resolves: rhbz#1629054
+- grubby-bls: escape delimiter character before replacing the options field
+  Resolves: rhbz#1640017
+- grubby-bls: grubby-bls: use id instead of title to get the default entry
+  Resolves: rhbz#1638103
+- grubby-bls: use ~debug instead of -debug as suffix to sort correctly
+  Related: rhbz#1638103
+- grubby-bls: allow to add many BLS entries for the same kernel image
+  Resolves: rhbz#1634752
+- grubby-bls: fix --default-* options for s390x
+  Resolves: rhbz#1644608
+
 * Fri Aug 10 2018 Javier Martinez Canillas <javierm@redhat.com> - 8.40-18
 - Make installkernel to use kernel-install scripts on BLS configuration
 

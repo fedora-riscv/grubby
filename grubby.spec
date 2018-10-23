@@ -39,8 +39,6 @@ This package provides a grubby compatibility script that manages
 BootLoaderSpec files and is meant to only be used for legacy compatibility
 users with existing grubby users.
 
-%global debug_package %{nil}
-
 %prep
 %setup -q -n grubby-%{version}-1
 

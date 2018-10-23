@@ -89,7 +89,8 @@ get_bls_values() {
         bls_linux[$count]="$(get_bls_value ${bls} linux)"
         bls_initrd[$count]="$(get_bls_value ${bls} initrd)"
         bls_options[$count]="$(get_bls_value ${bls} options)"
-        bls_id[$count]="$(get_bls_value ${bls} id)"
+        bls_id[$count]="${bls%.conf}"
+        bls_id[$count]="${bls_id[$count]##*/}"
 
         count=$((count+1))
     done
@@ -193,6 +194,7 @@ display_info_values() {
         echo "args=\"${bls_options[$i]}\""
         echo "initrd=${bls_initrd[$i]}"
         echo "title=${bls_title[$i]}"
+        echo "id=\"${bls_id[$i]}\""
     done
     exit 0
 }

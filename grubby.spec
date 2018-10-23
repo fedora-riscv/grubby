@@ -35,11 +35,9 @@ Requires: s390utils-base
 %endif
 
 %description
-grubby is a command line tool for updating and displaying information about
-the configuration files for the grub, lilo, elilo (ia64), yaboot (powerpc)
-and zipl (s390) boot loaders. It is primarily designed to be used from scripts
-which install new kernels and need to find information about the current boot 
-environment.
+This package provides a grubby compatibility script that manages
+BootLoaderSpec files and is meant to only be used for legacy compatibility
+users with existing grubby users.
 
 %global debug_package %{nil}
 
@@ -75,34 +73,41 @@ sed -e "s,@@LIBEXECDIR@@,%{_libexecdir}/grubby,g" %{SOURCE2} \
 sed -e "s,@@LIBEXECDIR@@,%{_libexecdir}/installkernel,g" %{SOURCE3} \
 	> %{buildroot}%{_sbindir}/installkernel
 
-%package bls
-Summary:	Command line tool for updating BootLoaderSpec files
+%package deprecated
+Summary:	Legacy command line tool for updating bootloader configs
 Conflicts:	%{name} <= 8.40-13
-BuildArch:	noarch
 
-%description bls
-This package provides a grubby wrapper that manages BootLoaderSpec files and is
-meant to only be used for legacy compatibility users with existing grubby users.
+%description deprecated
+This package provides deprecated, legacy grubby.  This is for temporary
+compatibility only.
+
+grubby is a command line tool for updating and displaying information about
+the configuration files for the grub, lilo, elilo (ia64), yaboot (powerpc)
+and zipl (s390) boot loaders. It is primarily designed to be used from
+scripts which install new kernels and need to find information about the
+current boot environment.
 
 %files
 %{!?_licensedir:%global license %%doc}
 %license COPYING
 %dir %{_libexecdir}/grubby
-%attr(0755,root,root) %{_libexecdir}/grubby/grubby
 %dir %{_libexecdir}/installkernel
+%attr(0755,root,root) %{_libexecdir}/grubby/grubby-bls
+%attr(0755,root,root) %{_sbindir}/grubby
+%attr(0755,root,root) %{_sbindir}/installkernel
+%{_mandir}/man8/[gi]*.8*
+
+%files deprecated
+%{!?_licensedir:%global license %%doc}
+%license COPYING
+%dir %{_libexecdir}/grubby
+%dir %{_libexecdir}/installkernel
+%attr(0755,root,root) %{_libexecdir}/grubby/grubby
 %attr(0755,root,root) %{_libexecdir}/installkernel/installkernel
 %attr(0755,root,root) %{_sbindir}/grubby
 %attr(0755,root,root) %{_sbindir}/installkernel
 %attr(0755,root,root) %{_sbindir}/new-kernel-pkg
-%{_mandir}/man8/*.8*
-
-%files bls
-%{!?_licensedir:%global license %%doc}
-%license COPYING
-%dir %{_libexecdir}/grubby
-%attr(0755,root,root) %{_libexecdir}/grubby/grubby-bls
-%attr(0755,root,root) %{_sbindir}/grubby
-%{_mandir}/man8/*.8*
+ %{_mandir}/man8/*.8*
 
 %changelog
 * Fri Aug 10 2018 Javier Martinez Canillas <javierm@redhat.com> - 8.40-18

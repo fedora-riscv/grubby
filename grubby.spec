@@ -12,6 +12,7 @@ Source0: https://github.com/rhboot/grubby/archive/%{version}-1.tar.gz
 Source1: grubby-bls
 Source2: grubby.in
 Source3: installkernel.in
+Source4: installkernel-bls
 Patch1: drop-uboot-uImage-creation.patch
 Patch2: 0001-Change-return-type-in-getRootSpecifier.patch
 Patch3: 0002-Add-btrfs-subvolume-support-for-grub2.patch
@@ -66,6 +67,7 @@ mkdir -p %{buildroot}%{_libexecdir}/{grubby,installkernel}/ %{buildroot}%{_sbind
 mv -v %{buildroot}%{_sbindir}/grubby %{buildroot}%{_libexecdir}/grubby/grubby
 mv -v %{buildroot}%{_sbindir}/installkernel %{buildroot}%{_libexecdir}/installkernel/installkernel
 cp -v %{SOURCE1} %{buildroot}%{_libexecdir}/grubby/
+cp -v %{SOURCE4} %{buildroot}%{_libexecdir}/installkernel/
 sed -e "s,@@LIBEXECDIR@@,%{_libexecdir}/grubby,g" %{SOURCE2} \
 	> %{buildroot}%{_sbindir}/grubby
 sed -e "s,@@LIBEXECDIR@@,%{_libexecdir}/installkernel,g" %{SOURCE3} \
@@ -92,6 +94,7 @@ current boot environment.
 %dir %{_libexecdir}/installkernel
 %attr(0755,root,root) %{_libexecdir}/grubby/grubby-bls
 %attr(0755,root,root) %{_sbindir}/grubby
+%attr(0755,root,root) %{_libexecdir}/installkernel/installkernel-bls
 %attr(0755,root,root) %{_sbindir}/installkernel
 %{_mandir}/man8/[gi]*.8*
 

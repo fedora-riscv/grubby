@@ -260,6 +260,35 @@ remove_bls_fragment() {
     update_grubcfg
 }
 
+get_custom_bls_filename() {
+    local kernelver=$1
+    local bls_target="${blsdir}/${MACHINE_ID}-${kernelver}.conf"
+    count=0
+    local -a files
+    local IFS=$'\n'
+
+    prefix="${bls_target%%.conf}"
+    prefix="${bls_target%%${arch}}"
+    prefix="${prefix%.*}"
+
+    last=($(for bls in ${prefix}.*~custom*.conf ; do
+        if ! [[ -e "${bls}" ]] ; then
+            continue
+        fi
+        bls="${bls##${prefix}.}"
+        bls="${bls%%~custom*}"
+        echo "${bls}"
+    done | tail -n1)) || :
+
+    if [[ -z $last ]]; then
+        last="0"
+    else
+        last=$((last+1))
+    fi
+
+    echo "${bls_target}" | sed -e "s!${prefix}!${prefix}.${last}~custom!"
+}
+
 add_bls_fragment() {
     local kernel="$1" && shift
     local title="$1" && shift
@@ -288,6 +317,12 @@ add_bls_fragment() {
     fi
 
     bls_target="${blsdir}/${MACHINE_ID}-${kernelver}.conf"
+
+    if [[ -e ${bls_target} ]]; then
+        bls_target="$(get_custom_bls_filename "${kernelver}")"
+        print_info "An entry for kernel ${kernelver} already exists, adding ${bls_target}"
+    fi
+
     kernel_dir="/lib/modules/${kernelver}"
     if [[ -f "${kernel_dir}/bls.conf" ]]; then
         cp -aT "${kernel_dir}/bls.conf" "${bls_target}" || exit $?

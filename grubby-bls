@@ -133,8 +133,17 @@ get_default_index() {
     fi
 
     for i in ${!bls_file[@]}; do
-        if [[ $title = ${bls_title[$i]} || $id = ${bls_id[$i]} ||
-           $i -eq $index ]]; then
+        if [[ $i -eq $index ]]; then
+            echo $i
+            return
+        fi
+
+        if [[ $bootloader = "grub2" && $id = ${bls_id[$i]} ]]; then
+            echo $i
+            return
+        fi
+
+        if [[ $bootloader = "zipl" && $version = ${bls_version[$i]} ]]; then
             echo $i
             return
         fi

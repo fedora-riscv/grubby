@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 18%{?dist}
+Release: 19%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -115,7 +115,7 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
-* Tue Oct 23 2018 Javier Martinez Canillas <javierm@redhat.com>
+* Tue Nov 06 2018 Javier Martinez Canillas <javierm@redhat.com> - 8.40-19
 - Make the temporary config wrapper be what "grubby" contains, and put
   traditional grubby in grubby-deprecated (pjones)
 - Re-enable debuginfo generation (pjones)

@@ -151,6 +151,8 @@ current boot environment.
   Resolves: rhbz#1634752
 - grubby-bls: fix --default-* options for s390x
   Resolves: rhbz#1644608
+- grubby-bls: only compare using relative paths if /boot is a mount point
+  Resolves: rhbz#1642078
 
 * Fri Aug 10 2018 Javier Martinez Canillas <javierm@redhat.com> - 8.40-18
 - Make installkernel to use kernel-install scripts on BLS configuration

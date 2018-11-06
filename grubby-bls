@@ -686,7 +686,7 @@ if [[ -n $display_info ]]; then
     display_info_values "${display_info}"
 fi
 
-if [[ $bootloader = grub2 ]]; then
+if [[ $bootloader = grub2 ]] && grep -q /boot /proc/mounts; then
     remove_var_prefix
 fi
 

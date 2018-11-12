@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 19%{?dist}
+Release: 20%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -37,6 +37,8 @@ Requires: grub2-tools
 Requires: s390utils-base
 %endif
 Requires: findutils
+
+Obsoletes:	%{name}-bls
 
 %description
 This package provides a grubby compatibility script that manages
@@ -76,9 +78,21 @@ sed -e "s,@@LIBEXECDIR@@,%{_libexecdir}/grubby,g" %{SOURCE2} \
 sed -e "s,@@LIBEXECDIR@@,%{_libexecdir}/installkernel,g" %{SOURCE3} \
 	> %{buildroot}%{_sbindir}/installkernel
 
+%post
+if [ "$1" = 2 ]; then
+    arch=$(uname -m)
+    if [[ $arch == "s390x" ]]; then
+        command=zipl-switch-to-blscfg
+    else
+        command=grub2-switch-to-blscfg
+    fi
+
+    $command --backup-suffix=.rpmsave &>/dev/null || :
+fi
+
 %package deprecated
 Summary:	Legacy command line tool for updating bootloader configs
-Conflicts:	%{name} <= 8.40-13
+Conflicts:	%{name} <= 8.40-18
 
 %description deprecated
 This package provides deprecated, legacy grubby.  This is for temporary
@@ -115,6 +129,9 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Tue Nov 13 2018 Javier Martinez Canillas <javierm@redhat.com> - 8.40-20
+- Switch to a BLS configuration on %%post
+
 * Tue Nov 06 2018 Javier Martinez Canillas <javierm@redhat.com> - 8.40-19
 - Make the temporary config wrapper be what "grubby" contains, and put
   traditional grubby in grubby-deprecated (pjones)

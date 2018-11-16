@@ -206,8 +206,17 @@ param_to_indexes() {
     echo -n "-1"
 }
 
+get_prefix() {
+    if [[ $bootloader = grub2 ]] && grep -q /boot /proc/mounts; then
+	echo "/boot"
+    else
+	echo ""
+    fi
+}
+
 display_info_values() {
     local indexes=($(param_to_indexes "$1"))
+    local prefix=$(get_prefix)
 
     if [[ $indexes = "-1" ]]; then
         print_error "The param $1 is incorrect"
@@ -215,9 +224,9 @@ display_info_values() {
 
     for i in ${indexes[*]}; do
         echo "index=$i"
-        echo "kernel=\"${bls_linux[$i]}\""
+        echo "kernel=\"${prefix}${bls_linux[$i]}\""
         echo "args=\"${bls_options[$i]}\""
-        echo "initrd=\"${bls_initrd[$i]}\""
+        echo "initrd=\"${prefix}${bls_initrd[$i]}\""
         echo "title=\"${bls_title[$i]}\""
         echo "id=\"${bls_id[$i]}\""
     done
@@ -231,6 +240,11 @@ mkbls() {
 
     local debugname=""
     local flavor=""
+    local prefix=""
+
+    if [[ $(get_prefix) = "" ]]; then
+	prefix="/boot"
+    fi
 
     if [[ $kernelver == *\+* ]] ; then
         local flavor=-"${kernelver##*+}"
@@ -244,7 +258,7 @@ mkbls() {
 title ${NAME} (${kernelver}) ${VERSION}${debugname}
 version ${kernelver}${debugid}
 linux ${kernel}
-initrd /initramfs-${kernelver}.img
+initrd ${prefix}/initramfs-${kernelver}.img
 options \$kernelopts
 id ${ID}-${datetime}-${kernelver}${debugid}
 grub_users \$grub_users
@@ -468,7 +482,7 @@ set_default_bls() {
         fi
     fi
 
-    print_info "The default is ${bls_file[$index]} with index $index and kernel ${bls_linux[$index]}"
+    print_info "The default is ${bls_file[$index]} with index $index and kernel $(get_prefix)${bls_linux[$index]}"
 }
 
 remove_var_prefix() {
@@ -686,7 +700,7 @@ if [[ -n $display_info ]]; then
     display_info_values "${display_info}"
 fi
 
-if [[ $bootloader = grub2 ]] && grep -q /boot /proc/mounts; then
+if [[ $(get_prefix) == "/boot" ]]; then
     remove_var_prefix
 fi
 

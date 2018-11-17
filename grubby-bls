@@ -223,9 +223,27 @@ display_info_values() {
     fi
 
     for i in ${indexes[*]}; do
+        local root=""
+        local args=${bls_options[$i]}
+        local opts=(${args})
+
+        for opt in ${opts[*]}; do
+            if echo $opt | grep -q "^root="; then
+                root="$(echo $opt | sed -e 's/root=//')"
+                value="$(echo ${opt} | sed -e 's/\//\\\//g')"
+                args="$(echo ${args} | sed -e "s/${value}[ \t]*//")"
+                break
+            fi
+        done
+
         echo "index=$i"
         echo "kernel=\"${prefix}${bls_linux[$i]}\""
-        echo "args=\"${bls_options[$i]}\""
+        echo "args=\"${args}\""
+
+        if [[ -n $root ]]; then
+            echo "root=\"${root}\""
+        fi
+
         echo "initrd=\"${prefix}${bls_initrd[$i]}\""
         echo "title=\"${bls_title[$i]}\""
         echo "id=\"${bls_id[$i]}\""

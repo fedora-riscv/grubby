@@ -129,7 +129,7 @@ get_default_index() {
     if [[ $bootloader = "grub2" ]]; then
 	id="$default"
     else
-	version="$default"
+	title="$default"
     fi
 
     for i in ${!bls_file[@]}; do
@@ -143,7 +143,7 @@ get_default_index() {
             return
         fi
 
-        if [[ $bootloader = "zipl" && $version = ${bls_version[$i]} ]]; then
+        if [[ $bootloader = "zipl" && $title = ${bls_title[$i]} ]]; then
             echo $i
             return
         fi
@@ -459,7 +459,7 @@ set_default_bls() {
     if [[ $bootloader = grub2 ]]; then
         grub2-editenv "${env}" set saved_entry="${bls_id[$index]}"
     else
-        local default="${bls_version[$index]}"
+        local default="${bls_title[$index]}"
         local current="$(grep '^default=' ${zipl_config} | sed -e 's/^default=//')"
         if [[ -n $current ]]; then
             sed -i -e "s,^default=.*,default=${default}," "${zipl_config}"

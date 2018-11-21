@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 20%{?dist}
+Release: 21%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -129,6 +129,16 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Wed Nov 21 2018 Javier Martinez Canillas <javierm@redhat.com> - 8.40-21
+- installkernel-bls: remove unnecessary check for GRUB_ENABLE_BLSCFG=true
+  Resolves: rhbz#1647721
+- grubby-bls: use title field instead of version for zipl default entry
+  Related: rhbz#1645200
+- grubby-bls: print the absolute kernel and initramfs images paths
+  Resolves: rhbz#1649778
+- grubby-bls: make info print the root parameter if is present in cmdline
+  Resolves: rhbz#1649791
+
 * Tue Nov 13 2018 Javier Martinez Canillas <javierm@redhat.com> - 8.40-20
 - Switch to a BLS configuration on %%post
 

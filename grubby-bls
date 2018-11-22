@@ -421,27 +421,21 @@ update_args() {
     local add_args=($1) && shift
 
     for arg in ${remove_args[*]}; do
-        arg=$(echo $arg | sed -e 's/\//\\\//g')
-        args="$(echo $args | sed -e "s/$arg[^ ]*//")"
+        if [[ $arg = *"="* ]]; then
+            arg=$(echo $arg | sed -e 's/\//\\\//g')
+            args="$(echo $args | sed -E "s/(^|[[:space:]])$arg([[:space:]]|$)/ /")"
+        else
+            args="$(echo $args | sed -E "s/(^|[[:space:]])$arg(([[:space:]]|$)|([=][^ ]*([$]*)))/ /g")"
+        fi
     done
 
     for arg in ${add_args[*]}; do
-        if [[ $arg = *"="* ]]; then
-            value=${arg##*=}
-            key=${arg%%=$value}
-            exist=$(echo $args | grep "${key}=")
-            if [[ -n $exist ]]; then
-                value=$(echo $value | sed -e 's/\//\\\//g')
-                args="$(echo $args | sed -e "s/$key=[^ ]*/$key=$value/")"
-            else
-                args="$args $key=$value"
-            fi
-        else
-            exist=$(echo $args | grep $arg)
-            if ! [[ -n $exist ]]; then
-                args="$args $arg"
-            fi
-        fi
+        arg=${arg%=*}
+        args="$(echo $args | sed -E "s/(^|[[:space:]])$arg(([[:space:]]|$)|([=][^ ]*([$]*)))/ /g")"
+    done
+
+    for arg in ${add_args[*]}; do
+        args="$args $arg"
     done
 
     echo ${args}

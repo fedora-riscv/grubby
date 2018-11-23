@@ -216,6 +216,20 @@ get_prefix() {
     fi
 }
 
+expand_var() {
+    local var=$1
+
+    if [[ $bootloader == "grub2" ]]; then
+        local value="$(grub2-editenv "${env}" list | grep ${var##$} | sed -e "s/${var##$}=//")"
+        value="$(echo ${value} | sed -e 's/\//\\\//g')"
+        if [[ -n $value ]]; then
+            var="$value"
+        fi
+    fi
+
+    echo $var
+}
+
 display_info_values() {
     local indexes=($(param_to_indexes "$1"))
     local prefix=$(get_prefix)
@@ -226,7 +240,17 @@ display_info_values() {
 
     for i in ${indexes[*]}; do
         local root=""
+        local value=""
         local args=${bls_options[$i]}
+        local opts=(${args})
+
+        for opt in ${opts[*]}; do
+            if [[ $opt =~ ^\$ ]]; then
+                value="$(expand_var $opt)"
+                args="$(echo ${args} | sed -e "s/${opt}/${value}/")"
+            fi
+        done
+
         local opts=(${args})
 
         for opt in ${opts[*]}; do
@@ -443,7 +467,7 @@ update_args() {
 
 get_bls_args() {
     if [[ $bootloader = "grub2" && "${bls_options[$i]}" = "\$kernelopts" ]]; then
-        old_args=$(grub2-editenv list | grep kernelopts)
+        old_args=$(grub2-editenv "${env}" list | grep kernelopts)
         old_args="${old_args##kernelopts=}"
     else
         old_args="${bls_options[$i]}"

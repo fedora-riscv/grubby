@@ -391,16 +391,12 @@ add_bls_fragment() {
     fi
 
     kernel_dir="/lib/modules/${kernelver}"
-    if [[ -f "${kernel_dir}/bls.conf" ]]; then
-        cp -aT "${kernel_dir}/bls.conf" "${bls_target}" || exit $?
+    if [[ -d $kernel_dir ]]; then
+        datetime="$(date -u +%Y%m%d%H%M%S -d "$(stat -c '%y' "${kernel_dir}")")"
     else
-	if [[ -d $kernel_dir ]]; then
-	    datetime="$(date -u +%Y%m%d%H%M%S -d "$(stat -c '%y' "${kernel_dir}")")"
-	else
-	    datetime=0
-	fi
-        mkbls "${kernel}" "${kernelver}" "${datetime}" > "${bls_target}"
+        datetime=0
     fi
+    mkbls "${kernel}" "${kernelver}" "${datetime}" > "${bls_target}"
 
     if [[ -n $title ]]; then
         set_bls_value "${bls_target}" "title" "${title}"

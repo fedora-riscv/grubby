@@ -151,9 +151,11 @@ get_default_index() {
 }
 
 display_default_value() {
+    local prefix=$(get_prefix)
+
     case "$display_default" in
         kernel)
-            echo "${bls_linux[$default_index]}"
+            echo "${prefix}${bls_linux[$default_index]}"
             exit 0
             ;;
         index)

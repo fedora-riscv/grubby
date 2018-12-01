@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 21%{?dist}
+Release: 22%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -21,6 +21,7 @@ Patch0005: 0005-Use-system-LDFLAGS.patch
 Patch0006: 0006-Honor-sbindir.patch
 Patch0007: 0007-Make-installkernel-to-use-kernel-install-scripts-on-.patch
 Patch0008: 0008-Add-usr-libexec-rpm-sort.patch
+Patch0009: 0009-Improve-man-page-for-info-option.patch
 
 BuildRequires: gcc
 BuildRequires: pkgconfig glib2-devel popt-devel 
@@ -129,6 +130,20 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Fri Nov 30 2018 Javier Martinez Canillas <javierm@redhat.com> - 8.40-22
+- grubby-bls: also print the absolute path in the --default-kernel option
+  Resolves: rhbz#1649778
+- grubby-bls: allow to specify the same kernel param multiple times
+  Resolves: rhbz#1652486
+- grubby-bls: expand kernel options if these are environment variables
+  Resolves: rhbz#1649785
+- grubby-bls: always generate the BLS snippets when adding new entries
+  Resolves: rhbz#1653365
+- Improve man page for --info option (jstodola)
+  Resolves: rhbz#1651672
+- Make the old grubby take precedence over grubby-bls if is installed
+  Related: rhbz#165484
+
 * Wed Nov 21 2018 Javier Martinez Canillas <javierm@redhat.com> - 8.40-21
 - installkernel-bls: remove unnecessary check for GRUB_ENABLE_BLSCFG=true
   Resolves: rhbz#1647721

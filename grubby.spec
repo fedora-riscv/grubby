@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 22%{?dist}
+Release: 23%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -130,6 +130,10 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Tue Dec 11 2018 Javier Martinez Canillas <javierm@redhat.com> - 8.40-23
+- grubby-bls: lookup default entry by either id or title on grub2
+  Related: rhbz#1654936
+
 * Fri Nov 30 2018 Javier Martinez Canillas <javierm@redhat.com> - 8.40-22
 - grubby-bls: also print the absolute path in the --default-kernel option
   Resolves: rhbz#1649778

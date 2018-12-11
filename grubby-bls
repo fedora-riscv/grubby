@@ -125,25 +125,13 @@ get_default_index() {
 	index="$default"
     fi
 
-    # GRUB2 and zipl use different fields to set the default entry
-    if [[ $bootloader = "grub2" ]]; then
-	id="$default"
-    else
-	title="$default"
-    fi
-
     for i in ${!bls_file[@]}; do
         if [[ $i -eq $index ]]; then
             echo $i
             return
         fi
 
-        if [[ $bootloader = "grub2" && $id = ${bls_id[$i]} ]]; then
-            echo $i
-            return
-        fi
-
-        if [[ $bootloader = "zipl" && $title = ${bls_title[$i]} ]]; then
+        if [[ $default = ${bls_id[$i]} || $default = ${bls_title[$i]} ]]; then
             echo $i
             return
         fi

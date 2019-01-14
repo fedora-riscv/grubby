@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 23%{?dist}
+Release: 24%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -59,7 +59,8 @@ git config --unset user.email
 git config --unset user.name
 
 %build
-make %{?_smp_mflags}
+%set_build_flags
+make %{?_smp_mflags} LDFLAGS="${LDFLAGS}"
 
 %ifnarch aarch64 %{arm}
 %check
@@ -130,6 +131,12 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Mon Jan 14 2019 Javier Martinez Canillas <javierm@redhat.com> - 8.40-24
+- Correctly set LDFLAGS to include hardened flags (pjones)
+  Related: rhbz#1654936
+- grubby-bls: expand all variables in options field when updating it
+  Resolves: rhbz#1660700
+
 * Tue Dec 11 2018 Javier Martinez Canillas <javierm@redhat.com> - 8.40-23
 - grubby-bls: lookup default entry by either id or title on grub2
   Related: rhbz#1654936

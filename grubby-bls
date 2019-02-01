@@ -305,6 +305,15 @@ grub_class kernel${flavor}
 EOF
 }
 
+unset_default_bls()
+{
+    if [[ $bootloader = grub2 ]]; then
+        grub2-editenv "${env}" unset saved_entry
+    else
+        sed -i -e "/^default=.*/d" "${zipl_config}"
+    fi
+}
+
 remove_bls_fragment() {
     local indexes=($(param_to_indexes "$1"))
 
@@ -313,6 +322,9 @@ remove_bls_fragment() {
     fi
 
     for i in "${indexes[@]}"; do
+        if [[ $default_index = $i ]]; then
+            unset_default_bls
+        fi
         rm -f "${bls_file[$i]}"
     done
 

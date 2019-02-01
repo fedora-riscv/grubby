@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 24%{?dist}
+Release: 25%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -131,6 +131,9 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 8.40-25
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
+
 * Mon Jan 14 2019 Javier Martinez Canillas <javierm@redhat.com> - 8.40-24
 - Correctly set LDFLAGS to include hardened flags (pjones)
   Related: rhbz#1654936

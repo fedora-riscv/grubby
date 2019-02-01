@@ -309,7 +309,7 @@ remove_bls_fragment() {
     local indexes=($(param_to_indexes "$1"))
 
     if [[ $indexes = "-1" ]]; then
-	print_error "The param $1 is incorrect"
+	print_error "The param $(get_prefix)$1 is incorrect"
     fi
 
     for i in "${indexes[@]}"; do
@@ -456,13 +456,14 @@ update_args() {
 }
 
 update_bls_fragment() {
+    local param="$1"
     local indexes=($(param_to_indexes "$1")) && shift
     local remove_args=$1 && shift
     local add_args=$1 && shift
     local initrd=$1 && shift
 
     if [[ $indexes = "-1" ]]; then
-        print_error "The param $1 is incorrect"
+        print_error "The param $(get_prefix)${param} is incorrect"
     fi
 
     for i in ${indexes[*]}; do

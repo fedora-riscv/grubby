@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 25%{?dist}
+Release: 26%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -22,6 +22,7 @@ Patch0006: 0006-Honor-sbindir.patch
 Patch0007: 0007-Make-installkernel-to-use-kernel-install-scripts-on-.patch
 Patch0008: 0008-Add-usr-libexec-rpm-sort.patch
 Patch0009: 0009-Improve-man-page-for-info-option.patch
+Patch0010: 0010-Fix-GCC-warnings-about-possible-string-truncations-a.patch
 
 BuildRequires: gcc
 BuildRequires: pkgconfig glib2-devel popt-devel 
@@ -131,6 +132,11 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Tue Feb 05 2019 Javier Martinez Canillas <javierm@redhat.com> - 8.40-26
+- Fix GCC warnings about possible string truncations and buffer overflows
+- grubby-bls: unset default entry if is the one being removed
+- grubby-bls: show absolute path when printing error about incorrect param
+
 * Fri Feb 01 2019 Fedora Release Engineering <releng@fedoraproject.org> - 8.40-25
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 

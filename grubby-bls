@@ -706,6 +706,10 @@ while [ ${#} -gt 0 ]; do
     shift
 done
 
+if [[ -z $update_kernel ]] && [[ -n $args || -n $remove_args ]]; then
+    print_error "no action specified"
+fi
+
 if [[ -z $blsdir ]]; then
     blsdir="/boot/loader/entries"
 fi

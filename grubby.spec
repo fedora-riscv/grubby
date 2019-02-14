@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 26%{?dist}
+Release: 27%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -132,6 +132,9 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Thu Feb 14 2019 Javier Martinez Canillas <javierm@redhat.com> - 8.40-27
+- grubby-bls: error if args or remove-args is used without update-kernel
+
 * Tue Feb 05 2019 Javier Martinez Canillas <javierm@redhat.com> - 8.40-26
 - Fix GCC warnings about possible string truncations and buffer overflows
 - grubby-bls: unset default entry if is the one being removed

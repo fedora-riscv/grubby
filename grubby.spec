@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 28%{?dist}
+Release: 29%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -84,13 +84,8 @@ sed -e "s,@@LIBEXECDIR@@,%{_libexecdir}/installkernel,g" %{SOURCE3} \
 %post
 if [ "$1" = 2 ]; then
     arch=$(uname -m)
-    if [[ $arch == "s390x" ]]; then
-        command=zipl-switch-to-blscfg
-    else
-        command=grub2-switch-to-blscfg
-    fi
-
-    $command --backup-suffix=.rpmsave &>/dev/null || :
+    [[ $arch == "s390x" ]] && \
+    zipl-switch-to-blscfg --backup-suffix=.rpmsave &>/dev/null || :
 fi
 
 %package deprecated
@@ -132,6 +127,10 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Mon Mar 11 2019 Javier Martinez Canillas <javierm@redhat.com> - 8.40-29
+- Only switch to BLS config for s390x / zipl
+  Related: rhbz#1652806
+
 * Fri Mar 01 2019 Javier Martinez Canillas <javierm@redhat.com> - 8.40-28
 - grubby-bls: make --update-kernel ALL to update kernelopts var in grubenv
 

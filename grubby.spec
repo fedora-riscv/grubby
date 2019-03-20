@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 29%{?dist}
+Release: 30%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -127,6 +127,10 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Thu Mar 21 2019 Javier Martinez Canillas <javierm@redhat.com> - 8.40-30
+- grubby-bls: fix --add-kernel not working when using the --args option
+  Resolves: rhbz#1691004
+
 * Mon Mar 11 2019 Javier Martinez Canillas <javierm@redhat.com> - 8.40-29
 - Only switch to BLS config for s390x / zipl
   Related: rhbz#1652806

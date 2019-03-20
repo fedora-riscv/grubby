@@ -734,7 +734,7 @@ while [ ${#} -gt 0 ]; do
     shift
 done
 
-if [[ -z $update_kernel ]] && [[ -n $args || -n $remove_args ]]; then
+if [[ -z $update_kernel && -z $kernel ]] && [[ -n $args || -n $remove_args ]]; then
     print_error "no action specified"
 fi
 

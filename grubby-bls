@@ -197,7 +197,7 @@ param_to_indexes() {
 }
 
 get_prefix() {
-    if [[ $bootloader = grub2 ]] && grep -q /boot /proc/mounts; then
+    if [[ $bootloader = grub2 ]] && mountpoint -q /boot; then
 	echo "/boot"
     else
 	echo ""

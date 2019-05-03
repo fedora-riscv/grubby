@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 30%{?dist}
+Release: 31%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -39,6 +39,7 @@ Requires: grub2-tools
 Requires: s390utils-base
 %endif
 Requires: findutils
+Requires: util-linux
 
 Obsoletes:	%{name}-bls
 
@@ -127,6 +128,10 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Fri May 03 2019 Javier Martinez Canillas <javierm@redhat.com> - 8.40-31
+- Use mountpoint command to check whether /boot is a mount point
+  Resolves: rhbz#1706091
+
 * Thu Mar 21 2019 Javier Martinez Canillas <javierm@redhat.com> - 8.40-30
 - grubby-bls: fix --add-kernel not working when using the --args option
   Resolves: rhbz#1691004

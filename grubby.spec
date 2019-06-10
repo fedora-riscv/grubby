@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 32%{?dist}
+Release: 33%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -128,6 +128,9 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Mon Jun 10 22:13:19 CET 2019 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 8.40-33
+- Rebuild for RPM 4.15
+
 * Mon Jun 10 15:42:02 CET 2019 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 8.40-32
 - Rebuild for RPM 4.15
 

@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 30%{?dist}
+Release: 31%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -13,6 +13,7 @@ Source1: grubby-bls
 Source2: grubby.in
 Source3: installkernel.in
 Source4: installkernel-bls
+Source5: 95-kernel-hooks.install
 Patch0001: 0001-remove-the-old-crufty-u-boot-support.patch
 Patch0002: 0002-Change-return-type-in-getRootSpecifier.patch
 Patch0003: 0003-Add-btrfs-subvolume-support-for-grub2.patch
@@ -80,6 +81,7 @@ sed -e "s,@@LIBEXECDIR@@,%{_libexecdir}/grubby,g" %{SOURCE2} \
 	> %{buildroot}%{_sbindir}/grubby
 sed -e "s,@@LIBEXECDIR@@,%{_libexecdir}/installkernel,g" %{SOURCE3} \
 	> %{buildroot}%{_sbindir}/installkernel
+install -D -m 0755 -t %{buildroot}%{_prefix}/lib/kernel/install.d/ %{SOURCE5}
 
 %post
 if [ "$1" = 2 ]; then
@@ -112,6 +114,7 @@ current boot environment.
 %attr(0755,root,root) %{_sbindir}/grubby
 %attr(0755,root,root) %{_libexecdir}/installkernel/installkernel-bls
 %attr(0755,root,root) %{_sbindir}/installkernel
+%attr(0755,root,root) %{_prefix}/lib/kernel/install.d/95-kernel-hooks.install
 %{_mandir}/man8/[gi]*.8*
 
 %files deprecated
@@ -127,6 +130,10 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Fri Jun 21 2019 Javier Martinez Canillas <javierm@redhat.com> - 8.40-31
+- Add a kernel-install plugin to execute hook scripts in /etc/kernel/
+  Resolves: rhbz#1696202
+
 * Thu Mar 21 2019 Javier Martinez Canillas <javierm@redhat.com> - 8.40-30
 - grubby-bls: fix --add-kernel not working when using the --args option
   Resolves: rhbz#1691004

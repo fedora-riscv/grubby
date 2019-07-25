@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 34%{?dist}
+Release: 35%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -131,6 +131,9 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Thu Jul 25 2019 Fedora Release Engineering <releng@fedoraproject.org> - 8.40-35
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
+
 * Mon Jun 17 2019 Javier Martinez Canillas <javierm@redhat.com> - 8.40-34
 - Add a kernel-install plugin to execute hook scripts in /etc/kernel/
   Resolves: rhbz#1696202

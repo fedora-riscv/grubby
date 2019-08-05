@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 35%{?dist}
+Release: 36%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -131,6 +131,9 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Tue Aug 06 2019 Yuval Turgeman <yturgema@redhat.com> - 8.40-36
+- grubby-bls: strip only /boot from paths
+
 * Thu Jul 25 2019 Fedora Release Engineering <releng@fedoraproject.org> - 8.40-35
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 

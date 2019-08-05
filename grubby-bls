@@ -544,24 +544,28 @@ set_default_bls() {
 }
 
 remove_var_prefix() {
+    local prefix="$1"
+
+    [ -z "${prefix}" ] && return
+
     if [[ -n $remove_kernel && $remove_kernel =~ ^/ ]]; then
-       remove_kernel="/${remove_kernel##*/}"
+       remove_kernel="/${remove_kernel##${prefix}/}"
     fi
 
     if [[ -n $initrd ]]; then
-	initrd="/${initrd##*/}"
+	initrd="/${initrd##${prefix}/}"
     fi
 
     if [[ -n $extra_initrd ]]; then
-	extra_initrd=" /${extra_initrd##*/}"
+	extra_initrd=" /${extra_initrd##${prefix}/}"
     fi
 
     if [[ -n $kernel ]]; then
-	kernel="/${kernel##*/}"
+	kernel="/${kernel##${prefix}/}"
     fi
 
     if [[ -n $update_kernel && $update_kernel =~ ^/ ]]; then
-	update_kernel="/${update_kernel##*/}"
+	update_kernel="/${update_kernel##${prefix}/}"
     fi
 }
 
@@ -762,9 +766,7 @@ if [[ -n $display_info ]]; then
     display_info_values "${display_info}"
 fi
 
-if [[ $(get_prefix) == "/boot" ]]; then
-    remove_var_prefix
-fi
+remove_var_prefix "$(get_prefix)"
 
 if [[ -n $kernel ]]; then
     if [[ $copy_default = "true" ]]; then

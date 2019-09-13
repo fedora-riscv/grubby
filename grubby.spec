@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 31%{?dist}
+Release: 32%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -83,13 +83,6 @@ sed -e "s,@@LIBEXECDIR@@,%{_libexecdir}/installkernel,g" %{SOURCE3} \
 	> %{buildroot}%{_sbindir}/installkernel
 install -D -m 0755 -t %{buildroot}%{_prefix}/lib/kernel/install.d/ %{SOURCE5}
 
-%post
-if [ "$1" = 2 ]; then
-    arch=$(uname -m)
-    [[ $arch == "s390x" ]] && \
-    zipl-switch-to-blscfg --backup-suffix=.rpmsave &>/dev/null || :
-fi
-
 %package deprecated
 Summary:	Legacy command line tool for updating bootloader configs
 Conflicts:	%{name} <= 8.40-18
@@ -130,6 +123,10 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Fri Sep 13 2019 Javier Martinez Canillas <javierm@redhat.com> - 8.40-32
+- Don't execute the zipl-switch-to-blscfg script in %%post scriptlet
+  Related: rhbz#1748348
+
 * Fri Jun 21 2019 Javier Martinez Canillas <javierm@redhat.com> - 8.40-31
 - Add a kernel-install plugin to execute hook scripts in /etc/kernel/
   Resolves: rhbz#1696202

@@ -92,7 +92,7 @@ get_bls_values() {
         bls="${bls%.conf}"
         bls="${bls##*/}"
         echo "${bls}"
-    done | /usr/libexec/grubby/rpm-sort -c rpmnvrcmp | tac)) || :
+    done | /usr/libexec/grubby/rpm-sort -c rpmnvrcmp 2>/dev/null | tac)) || :
 
     for bls in "${files[@]}" ; do
         blspath="${blsdir}/${bls}.conf"

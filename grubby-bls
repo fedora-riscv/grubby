@@ -572,7 +572,7 @@ remove_var_prefix() {
 update_grubcfg()
 {
     if [[ $arch = 'ppc64' || $arch = 'ppc64le' ]]; then
-	grub2-mkconfig -o /boot/grub2/grub.cfg >& /dev/null
+	grub2-mkconfig -o "${grub_config}" >& /dev/null
     fi
 }
 
@@ -595,7 +595,6 @@ Usage: grubby [OPTION...]
       --initrd=initrd-path                initrd image for the new kernel
   -i, --extra-initrd=initrd-path          auxiliary initrd image for things other than the new kernel
       --make-default                      make the newly added entry the default boot entry
-  -o, --output-file=path                  path to output updated config file ("-" for stdout)
       --remove-args=STRING                remove kernel arguments
       --remove-kernel=kernel-path         remove all entries for the specified kernel
       --set-default=kernel-path           make the first entry referencing the specified kernel the default
@@ -611,9 +610,9 @@ Help options:
 EOF
 }
 
-OPTS="$(getopt -o c:i:o:b:? --long help,add-kernel:,args:,bad-image-okay,\
+OPTS="$(getopt -o c:i:b:? --long help,add-kernel:,args:,bad-image-okay,\
 config-file:,copy-default,default-kernel,default-index,default-title,env:,\
-grub2,info:,initrd:,extra-initrd:,make-default,output-file:,remove-args:,\
+grub2,info:,initrd:,extra-initrd:,make-default,remove-args:,\
 remove-kernel:,set-default:,set-default-index:,title:,update-kernel:,zipl,\
 bls-directory:,add-kernel:,add-multiboot:,mbargs:,mounts:,boot-filesystem:,\
 bootloader-probe,debug,devtree,devtreedir:,elilo,efi,extlinux,grub,lilo,\
@@ -641,6 +640,7 @@ while [ ${#} -gt 0 ]; do
             bad_image=true
             ;;
         --config-file|-c)
+            grub_config="${2}"
             zipl_config="${2}"
             shift
             ;;
@@ -677,10 +677,6 @@ while [ ${#} -gt 0 ]; do
             ;;
         --make-default)
             make_default=true
-            ;;
-        --output-file|-o)
-            output_file="${2}"
-            shift
             ;;
         --remove-args)
             remove_args="${2}"
@@ -752,6 +748,10 @@ fi
 
 if [[ -z $zipl_config ]]; then
     zipl_config="/etc/zipl.conf"
+fi
+
+if [[ -z $grub_config ]]; then
+    grub_config="/boot/grub2/grub.cfg"
 fi
 
 get_bls_values

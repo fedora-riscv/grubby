@@ -224,10 +224,10 @@ has_kernelopts()
     local opts=(${args})
 
     for opt in ${opts[*]}; do
-        [[ $opt = "\$kernelopts" ]] && return 0
+        [[ $opt = "\$kernelopts" ]] && echo "true"
     done
 
-    return 1
+    echo "false"
 }
 
 get_bls_args() {
@@ -504,11 +504,11 @@ update_bls_fragment() {
             local old_args="$(get_bls_args "$i")"
             local new_args="$(update_args "${old_args}" "${remove_args}" "${add_args}")"
 
-            if [[ $param != "ALL" || ! "$(has_kernelopts "$i")" ]]; then
+            if [[ $param != "ALL" || "$(has_kernelopts "$i")" = "false" ]]; then
                 set_bls_value "${bls_file[$i]}" "options" "${new_args}"
             fi
 
-            if [[ $bootloader = grub2 && ! "$(has_kernelopts "$i")" && $opts = $new_args ]]; then
+            if [[ $bootloader = grub2 && "$(has_kernelopts "$i")" = "false" && $opts = $new_args ]]; then
                 set_bls_value "${bls_file[$i]}" "options" "\$kernelopts"
             fi
 	fi

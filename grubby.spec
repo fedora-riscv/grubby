@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 36%{?dist}
+Release: 37%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -131,6 +131,14 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Thu Nov 28 2019 Javier Martinez Canillas <javierm@redhat.com> - 8.40-37
+- grubby-bls: don't print rpm-sort error messages
+  Resolves: rhbz#1731924
+- grubby-bls: remove -o option and support -c for ppc64le grub config
+  Resolves: rhbz#1758598
+- grubby-bls: fix logic to check if the kernelopts var is defined in a BLS
+  Resolves: rhbz#1726514
+
 * Tue Aug 06 2019 Yuval Turgeman <yturgema@redhat.com> - 8.40-36
 - grubby-bls: strip only /boot from paths
 

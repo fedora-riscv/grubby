@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 37%{?dist}
+Release: 38%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -131,6 +131,10 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Fri Nov 29 2019 Javier Martinez Canillas <javierm@redhat.com> - 8.40-38
+- grubby-bls: don't update grubenv when generating grub.cfg for ppc64le
+  Related: rhbz#1726514
+
 * Thu Nov 28 2019 Javier Martinez Canillas <javierm@redhat.com> - 8.40-37
 - grubby-bls: don't print rpm-sort error messages
   Resolves: rhbz#1731924

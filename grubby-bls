@@ -572,7 +572,7 @@ remove_var_prefix() {
 update_grubcfg()
 {
     if [[ $arch = 'ppc64' || $arch = 'ppc64le' ]]; then
-	grub2-mkconfig -o "${grub_config}" >& /dev/null
+	grub2-mkconfig --no-grubenv-update -o "${grub_config}" >& /dev/null
     fi
 }
 

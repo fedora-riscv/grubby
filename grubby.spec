@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 38%{?dist}
+Release: 39%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -131,6 +131,9 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Wed Jan 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 8.40-39
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
+
 * Fri Nov 29 2019 Javier Martinez Canillas <javierm@redhat.com> - 8.40-38
 - grubby-bls: don't update grubenv when generating grub.cfg for ppc64le
   Related: rhbz#1726514

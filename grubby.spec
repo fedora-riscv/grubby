@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 39%{?dist}
+Release: 40%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -24,6 +24,8 @@ Patch0007: 0007-Make-installkernel-to-use-kernel-install-scripts-on-.patch
 Patch0008: 0008-Add-usr-libexec-rpm-sort.patch
 Patch0009: 0009-Improve-man-page-for-info-option.patch
 Patch0010: 0010-Fix-GCC-warnings-about-possible-string-truncations-a.patch
+Patch0011: 0011-Fix-stringop-overflow-warning.patch
+Patch0012: 0012-Fix-maybe-uninitialized-warning.patch
 
 BuildRequires: gcc
 BuildRequires: pkgconfig glib2-devel popt-devel 
@@ -42,7 +44,7 @@ Requires: s390utils-base
 Requires: findutils
 Requires: util-linux
 
-Obsoletes:	%{name}-bls
+Obsoletes:	%{name}-bls < %{version}-%{release}
 
 %description
 This package provides a grubby compatibility script that manages
@@ -131,6 +133,12 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Mon Feb 10 2020 Javier Martinez Canillas <javierm@redhat.com> - 8.40-40
+- Fix FTBFS
+  Resolves: rhbz#1799496
+- Fix wrong S-o-B tag in patch
+- Fix warning about using unversioned Obsoletes
+
 * Wed Jan 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 8.40-39
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
 

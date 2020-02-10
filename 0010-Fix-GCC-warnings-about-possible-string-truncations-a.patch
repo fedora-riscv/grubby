@@ -1,5 +1,5 @@
 From 00241c65a5c0b4bb32a847a6abb5a86d0c704a8f Mon Sep 17 00:00:00 2001
-From: no one <noone@example.com>
+From: Javier Martinez Canillas <javierm@redhat.com>
 Date: Tue, 5 Feb 2019 20:08:43 +0100
 Subject: [PATCH] Fix GCC warnings about possible string truncations and buffer
  overflows
@@ -10,7 +10,7 @@ leads to GCC complaining about possible string truncation and overflows.
 Fix this by using memcpy(), explicitly calculating the buffers lenghts
 and set a NUL byte terminator after copying the buffers.
 
-Signed-off-by: no one <noone@example.com>
+Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
 ---
  grubby.c | 35 +++++++++++++++++++++++++++--------
  1 file changed, 27 insertions(+), 8 deletions(-)

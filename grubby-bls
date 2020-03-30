@@ -492,7 +492,12 @@ update_bls_fragment() {
     fi
 
     if [[ $param = "ALL" && $bootloader = grub2 ]] && [[ -n $remove_args || -n $add_args ]]; then
-        local old_args="$(grub2-editenv "${env}" list | grep kernelopts | sed -e "s/kernelopts=//")"
+        local  old_args="$(source ${grub_etc_default}; echo ${GRUB_CMDLINE_LINUX})"
+        opts="$(update_args "${old_args}" "${remove_args}" "${add_args}")"
+        opts=$(echo $opts | sed -e 's/\//\\\//g')
+        sed -i -e "s/^GRUB_CMDLINE_LINUX.*/GRUB_CMDLINE_LINUX=\\\"${opts}\\\"/" "${grub_etc_default}"
+
+        old_args="$(grub2-editenv "${env}" list | grep kernelopts | sed -e "s/kernelopts=//")"
         opts="$(update_args "${old_args}" "${remove_args}" "${add_args}")"
         grub2-editenv "${env}" set kernelopts="${opts}"
     elif [[ $bootloader = grub2 ]]; then
@@ -752,6 +757,10 @@ fi
 
 if [[ -z $grub_config ]]; then
     grub_config="/boot/grub2/grub.cfg"
+fi
+
+if [[ -z $grub_etc_default ]]; then
+    grub_etc_default="/etc/default/grub"
 fi
 
 get_bls_values

@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 40%{?dist}
+Release: 41%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -133,6 +133,10 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Mon Mar 30 2020 Javier Martinez Canillas <javierm@redhat.com> - 8.40-41
+- Make grubby to also update GRUB_CMDLINE_LINUX in /etc/default/grub
+  Related: rhbz#1287854
+
 * Mon Feb 10 2020 Javier Martinez Canillas <javierm@redhat.com> - 8.40-40
 - Fix FTBFS
   Resolves: rhbz#1799496

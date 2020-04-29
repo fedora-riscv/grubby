@@ -14,6 +14,7 @@ Source2: grubby.in
 Source3: installkernel.in
 Source4: installkernel-bls
 Source5: 95-kernel-hooks.install
+Source6: grubby.8
 Patch0001: 0001-remove-the-old-crufty-u-boot-support.patch
 Patch0002: 0002-Change-return-type-in-getRootSpecifier.patch
 Patch0003: 0003-Add-btrfs-subvolume-support-for-grub2.patch
@@ -78,13 +79,15 @@ make install DESTDIR=$RPM_BUILD_ROOT mandir=%{_mandir} sbindir=%{_sbindir} libex
 mkdir -p %{buildroot}%{_libexecdir}/{grubby,installkernel}/ %{buildroot}%{_sbindir}/
 mv -v %{buildroot}%{_sbindir}/grubby %{buildroot}%{_libexecdir}/grubby/grubby
 mv -v %{buildroot}%{_sbindir}/installkernel %{buildroot}%{_libexecdir}/installkernel/installkernel
-cp -v %{SOURCE1} %{buildroot}%{_libexecdir}/grubby/
-cp -v %{SOURCE4} %{buildroot}%{_libexecdir}/installkernel/
+install -m 0755 %{SOURCE1} %{buildroot}%{_libexecdir}/grubby/
+install -m 0755 %{SOURCE4} %{buildroot}%{_libexecdir}/installkernel/
 sed -e "s,@@LIBEXECDIR@@,%{_libexecdir}/grubby,g" %{SOURCE2} \
 	> %{buildroot}%{_sbindir}/grubby
 sed -e "s,@@LIBEXECDIR@@,%{_libexecdir}/installkernel,g" %{SOURCE3} \
 	> %{buildroot}%{_sbindir}/installkernel
 install -D -m 0755 -t %{buildroot}%{_prefix}/lib/kernel/install.d/ %{SOURCE5}
+rm %{buildroot}%{_mandir}/man8/grubby.8*
+install -m 0755 %{SOURCE6} %{buildroot}%{_mandir}/man8/
 
 %post
 if [ "$1" = 2 ]; then

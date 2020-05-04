@@ -459,8 +459,8 @@ update_args() {
     local add_args=($1) && shift
 
     for arg in ${remove_args[*]}; do
+        arg="$(echo $arg | sed -e 's/\//\\\//g')"
         if [[ $arg = *"="* ]]; then
-            arg="$(echo $arg | sed -e 's/\//\\\//g')"
             args="$(echo $args | sed -E "s/(^|[[:space:]])$arg([[:space:]]|$)/ /")"
         else
             args="$(echo $args | sed -E "s/(^|[[:space:]])$arg(([[:space:]]|$)|([=][^ ]*([$]*)))/ /g")"
@@ -469,6 +469,7 @@ update_args() {
 
     for arg in ${add_args[*]}; do
         arg="${arg%%=*}"
+        arg="$(echo $arg | sed -e 's/\//\\\//g')"
         args="$(echo $args | sed -E "s/(^|[[:space:]])$arg(([[:space:]]|$)|([=][^ ]*([$]*)))/ /g")"
     done
 

@@ -493,10 +493,14 @@ update_bls_fragment() {
     fi
 
     if [[ $param = "ALL" && $bootloader = grub2 ]] && [[ -n $remove_args || -n $add_args ]]; then
-        local old_args="$(source ${grub_etc_default}; echo ${GRUB_CMDLINE_LINUX})"
-        opts="$(update_args "${old_args}" "${remove_args}" "${add_args}")"
-        opts=$(echo $opts | sed -e 's/\//\\\//g')
-        sed -i -e "s/^GRUB_CMDLINE_LINUX.*/GRUB_CMDLINE_LINUX=\\\"${opts}\\\"/" "${grub_etc_default}"
+        local old_args=""
+
+        if [[ -z $no_etc_update ]]; then
+            old_args="$(source ${grub_etc_default}; echo ${GRUB_CMDLINE_LINUX})"
+            opts="$(update_args "${old_args}" "${remove_args}" "${add_args}")"
+            opts=$(echo $opts | sed -e 's/\//\\\//g')
+            sed -i -e "s/^GRUB_CMDLINE_LINUX.*/GRUB_CMDLINE_LINUX=\\\"${opts}\\\"/" "${grub_etc_default}"
+        fi
 
         old_args="$(grub2-editenv "${env}" list | grep kernelopts | sed -e "s/kernelopts=//")"
         opts="$(update_args "${old_args}" "${remove_args}" "${add_args}")"
@@ -609,6 +613,7 @@ Usage: grubby [OPTION...]
       --update-kernel=kernel-path         updated information for the specified kernel
       --zipl                              configure zipl bootloader
   -b, --bls-directory                     path to directory containing the BootLoaderSpec fragment files
+      --no-etc-grub-update                don't update the GRUB_CMDLINE_LINUX variable in /etc/default/grub
 
 Help options:
   -?, --help                              Show this help message
@@ -620,7 +625,7 @@ OPTS="$(getopt -o c:i:b:? --long help,add-kernel:,args:,bad-image-okay,\
 config-file:,copy-default,default-kernel,default-index,default-title,env:,\
 grub2,info:,initrd:,extra-initrd:,make-default,remove-args:,\
 remove-kernel:,set-default:,set-default-index:,title:,update-kernel:,zipl,\
-bls-directory:,add-kernel:,add-multiboot:,mbargs:,mounts:,boot-filesystem:,\
+bls-directory:,no-etc-grub-update,add-multiboot:,mbargs:,mounts:,boot-filesystem:,\
 bootloader-probe,debug,devtree,devtreedir:,elilo,efi,extlinux,grub,lilo,\
 output-file:,remove-mbargs:,remove-multiboot:,silo,yaboot -n ${SCRIPTNAME} -- "$@")"
 
@@ -715,7 +720,11 @@ while [ ${#} -gt 0 ]; do
             blsdir="${2}"
 	    shift
 	    ;;
-        --add-kernel|--add-multiboot|--mbargs|--mounts|--boot-filesystem|\
+        --no-etc-grub-update)
+            no_etc_update=true
+            shift
+            ;;
+        --add-multiboot|--mbargs|--mounts|--boot-filesystem|\
         --bootloader-probe|--debug|--devtree|--devtreedir|--elilo|--efi|\
         --extlinux|--grub|--lilo|--output-file|--remove-mbargs|--silo|\
         --remove-multiboot|--slilo|--yaboot)

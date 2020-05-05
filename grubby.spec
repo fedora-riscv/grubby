@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 42%{?dist}
+Release: 43%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -136,6 +136,10 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Tue May 05 2020 Javier Martinez Canillas <javierm@redhat.com> - 8.40-43
+- grubby-bls: always escape the delimiter character used in sed commands
+- grubby-bls: add a --no-etc-grub-update option
+
 * Wed Apr 29 2020 Javier Martinez Canillas <javierm@redhat.com> - 8.40-42
 - grubby-bls: fix corner case when a kernel param value contains a '='
 - grubby-bls: update man page to match options in current wrapper script

@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 43%{?dist}
+Release: 44%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -87,7 +87,7 @@ sed -e "s,@@LIBEXECDIR@@,%{_libexecdir}/installkernel,g" %{SOURCE3} \
 	> %{buildroot}%{_sbindir}/installkernel
 install -D -m 0755 -t %{buildroot}%{_prefix}/lib/kernel/install.d/ %{SOURCE5}
 rm %{buildroot}%{_mandir}/man8/grubby.8*
-install -m 0755 %{SOURCE6} %{buildroot}%{_mandir}/man8/
+install -m 0644 %{SOURCE6} %{buildroot}%{_mandir}/man8/
 
 %post
 if [ "$1" = 2 ]; then
@@ -136,6 +136,9 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Wed May 06 2020 Javier Martinez Canillas <javierm@redhat.com> - 8.40-44
+- Fix installed man page file mode bits
+
 * Tue May 05 2020 Javier Martinez Canillas <javierm@redhat.com> - 8.40-43
 - grubby-bls: always escape the delimiter character used in sed commands
 - grubby-bls: add a --no-etc-grub-update option

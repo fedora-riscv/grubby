@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 44%{?dist}
+Release: 45%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -136,6 +136,9 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Wed May 13 2020 Javier Martinez Canillas <javierm@redhat.com> - 8.40-45
+- grubby-bls: don't replace options with kernelopts if values are the same
+
 * Wed May 06 2020 Javier Martinez Canillas <javierm@redhat.com> - 8.40-44
 - Fix installed man page file mode bits
 

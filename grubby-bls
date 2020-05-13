@@ -521,10 +521,6 @@ update_bls_fragment() {
             if [[ $param != "ALL" || "$(has_kernelopts "$i")" = "false" ]]; then
                 set_bls_value "${bls_file[$i]}" "options" "${new_args}"
             fi
-
-            if [[ $bootloader = grub2 && "$(has_kernelopts "$i")" = "false" && $opts = $new_args ]]; then
-                set_bls_value "${bls_file[$i]}" "options" "\$kernelopts"
-            fi
 	fi
 
 	if [[ -n $initrd ]]; then

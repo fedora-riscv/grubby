@@ -429,7 +429,7 @@ add_bls_fragment() {
     fi
 
     if [[ -n $extra_initrd ]]; then
-        append_bls_value "${bls_target}" "initrd" "${extra_initrd}"
+        append_bls_value "${bls_target}" "initrd" " ${extra_initrd}"
     fi
 
     if [[ $MAKEDEBUG = "yes" ]]; then
@@ -567,7 +567,7 @@ remove_var_prefix() {
     fi
 
     if [[ -n $extra_initrd ]]; then
-	extra_initrd=" /${extra_initrd##${prefix}/}"
+	extra_initrd="/${extra_initrd##${prefix}/}"
     fi
 
     if [[ -n $kernel ]]; then
@@ -683,7 +683,7 @@ while [ ${#} -gt 0 ]; do
             shift
             ;;
         --extra-initrd|-i)
-            extra_initrd=" /${2}"
+            extra_initrd="${2}"
             shift
             ;;
         --make-default)

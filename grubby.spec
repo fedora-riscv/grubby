@@ -41,7 +41,7 @@ Requires: grub2-tools-minimal
 Requires: grub2-tools
 %endif
 %ifarch s390 s390x
-Requires: s390utils-base
+Requires: s390utils-core
 %endif
 Requires: findutils
 Requires: util-linux

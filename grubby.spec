@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 48%{?dist}
+Release: 49%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -14,7 +14,9 @@ Source2: grubby.in
 Source3: installkernel.in
 Source4: installkernel-bls
 Source5: 95-kernel-hooks.install
-Source6: grubby.8
+Source6: 10-devicetree.install
+Source7: grubby.8
+
 Patch0001: 0001-remove-the-old-crufty-u-boot-support.patch
 Patch0002: 0002-Change-return-type-in-getRootSpecifier.patch
 Patch0003: 0003-Add-btrfs-subvolume-support-for-grub2.patch
@@ -31,7 +33,7 @@ Patch0013: 0013-Fix-build-with-rpm-4.16.patch
 
 BuildRequires: gcc
 BuildRequires: pkgconfig glib2-devel popt-devel 
-BuildRequires: libblkid-devel git-core sed make
+BuildRequires: libblkid-devel sed make
 # for make test / getopt:
 BuildRequires: util-linux-ng
 BuildRequires: rpm-devel
@@ -46,6 +48,7 @@ Requires: s390utils-core
 Requires: findutils
 Requires: util-linux
 
+Conflicts:	uboot-tools < 2021.01-0.1.rc2
 Obsoletes:	%{name}-bls < %{version}-%{release}
 
 %description
@@ -54,16 +57,7 @@ BootLoaderSpec files and is meant to only be used for legacy compatibility
 users with existing grubby users.
 
 %prep
-%setup -q -n grubby-%{version}-1
-
-git init
-git config user.email "noone@example.com"
-git config user.name "no one"
-git add .
-git commit -a -q -m "%{version} baseline"
-git am %{patches} </dev/null
-git config --unset user.email
-git config --unset user.name
+%autosetup -p1 -n grubby-%{version}-1
 
 %build
 %set_build_flags
@@ -87,8 +81,9 @@ sed -e "s,@@LIBEXECDIR@@,%{_libexecdir}/grubby,g" %{SOURCE2} \
 sed -e "s,@@LIBEXECDIR@@,%{_libexecdir}/installkernel,g" %{SOURCE3} \
 	> %{buildroot}%{_sbindir}/installkernel
 install -D -m 0755 -t %{buildroot}%{_prefix}/lib/kernel/install.d/ %{SOURCE5}
+install -D -m 0755 -t %{buildroot}%{_prefix}/lib/kernel/install.d/ %{SOURCE6}
 rm %{buildroot}%{_mandir}/man8/grubby.8*
-install -m 0644 %{SOURCE6} %{buildroot}%{_mandir}/man8/
+install -m 0644 %{SOURCE7} %{buildroot}%{_mandir}/man8/
 
 %post
 if [ "$1" = 2 ]; then
@@ -112,7 +107,6 @@ scripts which install new kernels and need to find information about the
 current boot environment.
 
 %files
-%{!?_licensedir:%global license %%doc}
 %license COPYING
 %dir %{_libexecdir}/grubby
 %dir %{_libexecdir}/installkernel
@@ -121,11 +115,11 @@ current boot environment.
 %attr(0755,root,root) %{_sbindir}/grubby
 %attr(0755,root,root) %{_libexecdir}/installkernel/installkernel-bls
 %attr(0755,root,root) %{_sbindir}/installkernel
+%attr(0755,root,root) %{_prefix}/lib/kernel/install.d/10-devicetree.install
 %attr(0755,root,root) %{_prefix}/lib/kernel/install.d/95-kernel-hooks.install
 %{_mandir}/man8/[gi]*.8*
 
 %files deprecated
-%{!?_licensedir:%global license %%doc}
 %license COPYING
 %dir %{_libexecdir}/grubby
 %dir %{_libexecdir}/installkernel
@@ -137,6 +131,9 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Fri Nov 20 2020 Peter Robinson <pbrobinson@fedoraproject.org> - 8.40-49
+- Add device tree kernel install option
+
 * Mon Oct 26 2020 Josh Boyer <jwb@redhat.com> - 8.40-48
 - Only require s390utils-core, not s390utils-base
 

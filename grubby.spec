@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 49%{?dist}
+Release: 50%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -61,7 +61,7 @@ users with existing grubby users.
 
 %build
 %set_build_flags
-make %{?_smp_mflags} LDFLAGS="${LDFLAGS}"
+%make_build LDFLAGS="${LDFLAGS}"
 
 %ifnarch aarch64 %{arm}
 %check
@@ -131,6 +131,10 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Wed Dec 30 2020 Tom Stellard <tstellar@redhat.com> - 8.40-50
+- Use make_build macro instead of plain make
+- https://docs.fedoraproject.org/en-US/packaging-guidelines/#_parallel_make
+
 * Fri Nov 20 2020 Peter Robinson <pbrobinson@fedoraproject.org> - 8.40-49
 - Add device tree kernel install option
 

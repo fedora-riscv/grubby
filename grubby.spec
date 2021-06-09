@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 52%{?dist}
+Release: 53%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -131,6 +131,9 @@ current boot environment.
  %{_mandir}/man8/*.8*
 
 %changelog
+* Wed Jun 09 2021 Javier Martinez Canillas <javierm@redhat.com> - 8.40-53
+- grubby-bls: expand only the kernelopts variable
+
 * Mon Apr 26 2021 Javier Martinez Canillas <javierm@redhat.com> - 8.40-52
 - grubby-bs: Fix changing kernel cmdline params not working on ppc64le
 

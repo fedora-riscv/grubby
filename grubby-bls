@@ -235,7 +235,7 @@ get_bls_args() {
     local opts=(${args})
 
     for opt in ${opts[*]}; do
-        if [[ $opt =~ ^\$ ]]; then
+        if [[ $opt = "\$kernelopts" ]]; then
             value="$(expand_var $opt)"
             args="$(echo ${args} | sed -e "s/${opt}/${value}/")"
         fi

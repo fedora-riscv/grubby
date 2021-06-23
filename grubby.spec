@@ -53,8 +53,8 @@ Obsoletes:	%{name}-bls < %{version}-%{release}
 
 %description
 This package provides a grubby compatibility script that manages
-BootLoaderSpec files and is meant to only be used for legacy compatibility
-users with existing grubby users.
+BootLoaderSpec files and is meant to be backward compatible with
+the previous grubby tool.
 
 %prep
 %autosetup -p1 -n grubby-%{version}-1

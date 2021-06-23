@@ -19,13 +19,10 @@ about the configuration files for the \fBgrub2\fR and \fBzipl\fR boot loaders.
 It is primarily designed to be used from scripts which install new kernels and
 need to find information about the current boot environment.
 
-On BIOS-based Intel x86 platforms, \fBgrub2\fR is the default bootloader and
-the configuration file is in \fB/boot/grub2/grub.cfg\fR. On UEFI-based Intel
-x86 platforms, \fBgrub2\fR is the default bootloader, and the configuration
-file is in \fB/boot/efi/EFI/redhat/grub.cfg\fR. On PowerPC platforms, systems
-based on Power8 and Power9 support \fBgrub2\fR as a bootloader and use a
-configuration stored in \fB/boot/grub2/grub.cfg\fR. On s390x platforms the
-\fBzipl\fR bootloader use a default configuration in \fB/etc/zipl.conf\fR.
+On BIOS-based Intel x86, PowerPC and UEFI-based platforms, \fBgrub2\fR is the
+default bootloader and the configuration file is in \fB/boot/grub2/grub.cfg\fR.
+On s390x platforms, the \fBzipl\fR bootloader use a default configuration in
+\fB/etc/zipl.conf\fR.
 
 All bootloaders define the boot entries as individual configuration fragments
 that are stored by default in \fB/boot/loader/entries\fR. The format for the

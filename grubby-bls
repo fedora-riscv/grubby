@@ -641,12 +641,12 @@ Usage: grubby [OPTION...]
       --no-etc-grub-update                don't update the GRUB_CMDLINE_LINUX variable in /etc/default/grub
 
 Help options:
-  -?, --help                              Show this help message
+  -h, --help                              Show this help message
 
 EOF
 }
 
-OPTS="$(getopt -o c:i:b:? --long help,add-kernel:,args:,bad-image-okay,\
+OPTS="$(getopt -o hc:i:b:? --long help,add-kernel:,args:,bad-image-okay,\
 config-file:,copy-default,default-kernel,default-index,default-title,env:,\
 grub2,info:,initrd:,extra-initrd:,make-default,remove-args:,\
 remove-kernel:,set-default:,set-default-index:,title:,update-kernel:,zipl,\

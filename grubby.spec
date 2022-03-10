@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 57%{?dist}
+Release: 58%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -63,17 +63,10 @@ the previous grubby tool.
 %set_build_flags
 %make_build LDFLAGS="${LDFLAGS}"
 
-%ifnarch aarch64 %{arm}
-%check
-make test
-%endif
-
 %install
 make install DESTDIR=$RPM_BUILD_ROOT mandir=%{_mandir} sbindir=%{_sbindir} libexecdir=%{_libexecdir}
 
 mkdir -p %{buildroot}%{_libexecdir}/{grubby,installkernel}/ %{buildroot}%{_sbindir}/
-mv -v %{buildroot}%{_sbindir}/grubby %{buildroot}%{_libexecdir}/grubby/grubby
-mv -v %{buildroot}%{_sbindir}/installkernel %{buildroot}%{_libexecdir}/installkernel/installkernel
 install -m 0755 %{SOURCE1} %{buildroot}%{_libexecdir}/grubby/
 install -m 0755 %{SOURCE4} %{buildroot}%{_libexecdir}/installkernel/
 sed -e "s,@@LIBEXECDIR@@,%{_libexecdir}/grubby,g" %{SOURCE2} \
@@ -82,8 +75,9 @@ sed -e "s,@@LIBEXECDIR@@,%{_libexecdir}/installkernel,g" %{SOURCE3} \
 	> %{buildroot}%{_sbindir}/installkernel
 install -D -m 0755 -t %{buildroot}%{_prefix}/lib/kernel/install.d/ %{SOURCE5}
 install -D -m 0755 -t %{buildroot}%{_prefix}/lib/kernel/install.d/ %{SOURCE6}
-rm %{buildroot}%{_mandir}/man8/grubby.8*
+rm %{buildroot}%{_mandir}/man8/{grubby,new-kernel-pkg}.8*
 install -m 0644 %{SOURCE7} %{buildroot}%{_mandir}/man8/
+rm %{buildroot}%{_sbindir}/new-kernel-pkg
 
 %post
 if [ "$1" = 2 ]; then
@@ -91,20 +85,6 @@ if [ "$1" = 2 ]; then
     [[ $arch == "s390x" ]] && \
     zipl-switch-to-blscfg --backup-suffix=.rpmsave &>/dev/null || :
 fi
-
-%package deprecated
-Summary:	Legacy command line tool for updating bootloader configs
-Conflicts:	%{name} <= 8.40-18
-
-%description deprecated
-This package provides deprecated, legacy grubby.  This is for temporary
-compatibility only.
-
-grubby is a command line tool for updating and displaying information about
-the configuration files for the grub, lilo, elilo (ia64), yaboot (powerpc)
-and zipl (s390) boot loaders. It is primarily designed to be used from
-scripts which install new kernels and need to find information about the
-current boot environment.
 
 %files
 %license COPYING
@@ -118,17 +98,6 @@ current boot environment.
 %attr(0755,root,root) %{_prefix}/lib/kernel/install.d/10-devicetree.install
 %attr(0755,root,root) %{_prefix}/lib/kernel/install.d/95-kernel-hooks.install
 %{_mandir}/man8/[gi]*.8*
-
-%files deprecated
-%license COPYING
-%dir %{_libexecdir}/grubby
-%dir %{_libexecdir}/installkernel
-%attr(0755,root,root) %{_libexecdir}/grubby/grubby
-%attr(0755,root,root) %{_libexecdir}/installkernel/installkernel
-%attr(0755,root,root) %{_sbindir}/grubby
-%attr(0755,root,root) %{_sbindir}/installkernel
-%attr(0755,root,root) %{_sbindir}/new-kernel-pkg
- %{_mandir}/man8/*.8*
 
 %changelog
 * Mon Feb 07 2022 Robbie Harwood <rharwood@redhat.com> - 8.40-57

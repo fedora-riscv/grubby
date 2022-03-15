@@ -100,6 +100,9 @@ fi
 %{_mandir}/man8/[gi]*.8*
 
 %changelog
+* Thu Mar 10 2022 Robbie Harwood <rharwood@redhat.com> - 8.40-58
+- Remove grubby-deprecated
+
 * Mon Feb 07 2022 Robbie Harwood <rharwood@redhat.com> - 8.40-57
 - grubby-bls: wire up -h (help)
 

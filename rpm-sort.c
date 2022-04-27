@@ -1,13 +1,14 @@
 #define _GNU_SOURCE
 
+#include <argp.h>
+#include <assert.h>
+#include <err.h>
+#include <errno.h>
+#include <rpm/rpmlib.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
-#include <errno.h>
-#include <assert.h>
-#include <argp.h>
-#include <rpm/rpmlib.h>
-#include <err.h>
 
 typedef enum {
         RPMNVRCMP,

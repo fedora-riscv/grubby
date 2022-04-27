@@ -22,7 +22,7 @@ BuildRequires: pkgconfig
 BuildRequires: popt-devel
 BuildRequires: rpm-devel
 BuildRequires: sed
-%ifarch aarch64 i686 x86_64 %{power64}
+%ifarch aarch64 x86_64 %{power64}
 BuildRequires: grub2-tools-minimal
 Requires: grub2-tools-minimal
 Requires: grub2-tools
@@ -33,6 +33,7 @@ Requires: s390utils-core
 Requires: findutils
 Requires: util-linux
 
+ExcludeArch: %{ix86}
 Conflicts:	uboot-tools < 2021.01-0.1.rc2
 Obsoletes:	%{name}-bls < %{version}-%{release}
 

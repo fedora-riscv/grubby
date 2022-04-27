@@ -1,42 +1,27 @@
+# What?  No.
+%define __brp_mangle_shebangs %{nil}
+
 Name: grubby
 Version: 8.40
-Release: 58%{?dist}
+Release: 59%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
-URL: https://github.com/rhinstaller/grubby
-# we only pull git snaps at the moment
-# git clone git@github.com:rhinstaller/grubby.git
-# git archive --format=tar --prefix=grubby-%%{version}/ HEAD |bzip2 > grubby-%%{version}.tar.bz2
-# Source0: %%{name}-%%{version}.tar.bz2
-Source0: https://github.com/rhboot/grubby/archive/%{version}-1.tar.gz
 Source1: grubby-bls
-Source2: grubby.in
-Source3: installkernel.in
+Source2: rpm-sort.c
+Source3: COPYING
 Source4: installkernel-bls
 Source5: 95-kernel-hooks.install
 Source6: 10-devicetree.install
 Source7: grubby.8
 
-Patch0001: 0001-remove-the-old-crufty-u-boot-support.patch
-Patch0002: 0002-Change-return-type-in-getRootSpecifier.patch
-Patch0003: 0003-Add-btrfs-subvolume-support-for-grub2.patch
-Patch0004: 0004-Add-tests-for-btrfs-support.patch
-Patch0005: 0005-Use-system-LDFLAGS.patch
-Patch0006: 0006-Honor-sbindir.patch
-Patch0007: 0007-Make-installkernel-to-use-kernel-install-scripts-on-.patch
-Patch0008: 0008-Add-usr-libexec-rpm-sort.patch
-Patch0009: 0009-Improve-man-page-for-info-option.patch
-Patch0010: 0010-Fix-GCC-warnings-about-possible-string-truncations-a.patch
-Patch0011: 0011-Fix-stringop-overflow-warning.patch
-Patch0012: 0012-Fix-maybe-uninitialized-warning.patch
-Patch0013: 0013-Fix-build-with-rpm-4.16.patch
-
 BuildRequires: gcc
-BuildRequires: pkgconfig glib2-devel popt-devel 
-BuildRequires: libblkid-devel sed make
-# for make test / getopt:
-BuildRequires: util-linux-ng
+BuildRequires: glib2-devel
+BuildRequires: libblkid-devel
+BuildRequires: make
+BuildRequires: pkgconfig
+BuildRequires: popt-devel
 BuildRequires: rpm-devel
+BuildRequires: sed
 %ifarch aarch64 i686 x86_64 %{power64}
 BuildRequires: grub2-tools-minimal
 Requires: grub2-tools-minimal
@@ -57,27 +42,27 @@ BootLoaderSpec files and is meant to be backward compatible with
 the previous grubby tool.
 
 %prep
-%autosetup -p1 -n grubby-%{version}-1
+# Make sure the license can be found in mock
+cp %{SOURCE3} . || true
 
 %build
 %set_build_flags
-%make_build LDFLAGS="${LDFLAGS}"
+gcc ${CPPFLAGS} ${CFLAGS} ${LDFLAGS} -std=gnu99 -DVERSION='"8.4.0"' \
+    -o rpm-sort %{SOURCE2} -lrpmio
 
 %install
-make install DESTDIR=$RPM_BUILD_ROOT mandir=%{_mandir} sbindir=%{_sbindir} libexecdir=%{_libexecdir}
+mkdir -p %{buildroot}%{_libexecdir}/grubby/
+install -D -m 0755 rpm-sort %{buildroot}%{_libexecdir}/grubby
 
-mkdir -p %{buildroot}%{_libexecdir}/{grubby,installkernel}/ %{buildroot}%{_sbindir}/
-install -m 0755 %{SOURCE1} %{buildroot}%{_libexecdir}/grubby/
-install -m 0755 %{SOURCE4} %{buildroot}%{_libexecdir}/installkernel/
-sed -e "s,@@LIBEXECDIR@@,%{_libexecdir}/grubby,g" %{SOURCE2} \
-	> %{buildroot}%{_sbindir}/grubby
-sed -e "s,@@LIBEXECDIR@@,%{_libexecdir}/installkernel,g" %{SOURCE3} \
-	> %{buildroot}%{_sbindir}/installkernel
+mkdir -p %{buildroot}%{_sbindir}/
+install -T -m 0755 %{SOURCE1} %{buildroot}%{_sbindir}/grubby
+install -T -m 0755 %{SOURCE4} %{buildroot}%{_sbindir}/installkernel
+
 install -D -m 0755 -t %{buildroot}%{_prefix}/lib/kernel/install.d/ %{SOURCE5}
 install -D -m 0755 -t %{buildroot}%{_prefix}/lib/kernel/install.d/ %{SOURCE6}
-rm %{buildroot}%{_mandir}/man8/{grubby,new-kernel-pkg}.8*
+
+mkdir -p %{buildroot}%{_mandir}/man8
 install -m 0644 %{SOURCE7} %{buildroot}%{_mandir}/man8/
-rm %{buildroot}%{_sbindir}/new-kernel-pkg
 
 %post
 if [ "$1" = 2 ]; then
@@ -89,17 +74,17 @@ fi
 %files
 %license COPYING
 %dir %{_libexecdir}/grubby
-%dir %{_libexecdir}/installkernel
-%attr(0755,root,root) %{_libexecdir}/grubby/grubby-bls
 %attr(0755,root,root) %{_libexecdir}/grubby/rpm-sort
 %attr(0755,root,root) %{_sbindir}/grubby
-%attr(0755,root,root) %{_libexecdir}/installkernel/installkernel-bls
 %attr(0755,root,root) %{_sbindir}/installkernel
 %attr(0755,root,root) %{_prefix}/lib/kernel/install.d/10-devicetree.install
 %attr(0755,root,root) %{_prefix}/lib/kernel/install.d/95-kernel-hooks.install
-%{_mandir}/man8/[gi]*.8*
+%{_mandir}/man8/grubby.8*
 
 %changelog
+* Wed Apr 27 2022 Robbie Harwood <rharwood@redhat.com> - 8.40-59
+- Remove upstream and layers of indirection around -bls
+
 * Thu Mar 10 2022 Robbie Harwood <rharwood@redhat.com> - 8.40-58
 - Remove grubby-deprecated
 

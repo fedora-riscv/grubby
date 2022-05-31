@@ -513,6 +513,19 @@ update_bls_fragment() {
         opts="$(grub2-editenv "${env}" list | grep kernelopts | sed -e "s/kernelopts=//")"
     fi
 
+    # systemd decide that what we needed was *another* place to configure this
+    # stuff (after our two, plus BLS).  Two, actually, but configuration
+    # doesn't live in /usr.  If we don't do this, kernel-install
+    # (90-loaderentry.install) will read arguments from /proc/cmdline (instead
+    # of our actual configuration...), causing future kernel installs to use
+    # the current kernel's arguments - which depending on when the system
+    # reboots, may or may not be what the user wanted...
+    if [[ $param = "ALL" && -e /etc/default/grub ]]; then
+        opts="$(source /etc/default/grub; echo ${GRUB_CMDLINE_LINUX})"
+        root="$(tr -s "$IFS" '\n' </proc/cmdline | grep root= | tr -d '\n')"
+        echo "$root $opts" > /etc/kernel/cmdline
+    fi
+
     for i in ${indexes[*]}; do
 	if [[ -n $remove_args || -n $add_args ]]; then
             local old_args="$(get_bls_args "$i")"

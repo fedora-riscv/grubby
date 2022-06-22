@@ -3,7 +3,7 @@
 
 Name: grubby
 Version: 8.40
-Release: 59%{?dist}
+Release: 61%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 Source1: grubby-bls
@@ -83,6 +83,12 @@ fi
 %{_mandir}/man8/grubby.8*
 
 %changelog
+* Wed Jun 22 2022 Robbie Harwood <rharwood@redhat.com> - 8.40-61
+- Revert previous change
+
+* Tue May 31 2022 Robbie Harwood <rharwood@redhat.com> - 8.40-60
+- Additionally write to /etc/kernel/cmdline
+
 * Wed Apr 27 2022 Robbie Harwood <rharwood@redhat.com> - 8.40-59
 - Remove upstream and layers of indirection around -bls
 

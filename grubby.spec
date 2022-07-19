@@ -3,7 +3,7 @@
 
 Name: grubby
 Version: 8.40
-Release: 61%{?dist}
+Release: 62%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 Source1: grubby-bls
@@ -83,6 +83,9 @@ fi
 %{_mandir}/man8/grubby.8*
 
 %changelog
+* Tue Jul 19 2022 Robbie Harwood <rharwood@redhat.com> - 8.40-62
+- Clarify that grub files aren't used on s390x in man page
+
 * Wed Jun 22 2022 Robbie Harwood <rharwood@redhat.com> - 8.40-61
 - Revert previous change
 

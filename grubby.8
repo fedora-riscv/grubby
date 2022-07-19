@@ -145,7 +145,8 @@ the only items that can be updated is the kernel argument list, which is
 modified via the \fB-\-args\fR and \fB-\-remove-args\fR options. If the
 \fBALL\fR argument is used the variable \fB GRUB_CMDLINE_LINUX\fR in
 \fB/etc/default/grub\fR is updated with the latest kernel argument list,
-unless the \fB-\-no-etc-grub-update\fR option is used.
+unless the \fB-\-no-etc-grub-update\fR option is used or the file does not
+exist (e.g., on s390x).
 
 .TP
 \fB-\-zipl\fR

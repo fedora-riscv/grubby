@@ -3,7 +3,7 @@
 
 Name: grubby
 Version: 8.40
-Release: 64%{?dist}
+Release: 65%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 Source1: grubby-bls
@@ -36,6 +36,7 @@ Requires: util-linux
 ExcludeArch: %{ix86}
 Conflicts:	uboot-tools < 2021.01-0.1.rc2
 Obsoletes:	%{name}-bls < %{version}-%{release}
+Obsoletes:	%{name}-deprecated < %{version}-%{release}
 
 %description
 This package provides a grubby compatibility script that manages
@@ -83,6 +84,10 @@ fi
 %{_mandir}/man8/grubby.8*
 
 %changelog
+* Wed Aug 17 2022 Robbie Harwood <rharwood@redhat.com> - 8.40-65
+- Mark package as obsoleting -deprecated
+- Resolves: #2117817
+
 * Tue Aug 02 2022 Robbie Harwood <rharwood@redhat.com> - 8.40-64
 - Handle updating /etc/kernel/cmdline
 

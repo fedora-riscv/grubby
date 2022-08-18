@@ -1,25 +1,41 @@
-# What?  No.
-%define __brp_mangle_shebangs %{nil}
-
 Name: grubby
 Version: 8.40
-Release: 65%{?dist}
+Release: 66%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
+URL: https://github.com/rhinstaller/grubby
+# we only pull git snaps at the moment
+# git clone git@github.com:rhinstaller/grubby.git
+# git archive --format=tar --prefix=grubby-%%{version}/ HEAD |bzip2 > grubby-%%{version}.tar.bz2
+# Source0: %%{name}-%%{version}.tar.bz2
+Source0: https://github.com/rhboot/grubby/archive/%{version}-1.tar.gz
 Source1: grubby-bls
-Source2: rpm-sort.c
-Source3: COPYING
+Source2: grubby.in
+Source3: installkernel.in
 Source4: installkernel-bls
 Source5: 95-kernel-hooks.install
 Source6: 10-devicetree.install
 Source7: grubby.8
 
+Patch0001: 0001-remove-the-old-crufty-u-boot-support.patch
+Patch0002: 0002-Change-return-type-in-getRootSpecifier.patch
+Patch0003: 0003-Add-btrfs-subvolume-support-for-grub2.patch
+Patch0004: 0004-Add-tests-for-btrfs-support.patch
+Patch0005: 0005-Use-system-LDFLAGS.patch
+Patch0006: 0006-Honor-sbindir.patch
+Patch0007: 0007-Make-installkernel-to-use-kernel-install-scripts-on-.patch
+Patch0008: 0008-Add-usr-libexec-rpm-sort.patch
+Patch0009: 0009-Improve-man-page-for-info-option.patch
+Patch0010: 0010-Fix-GCC-warnings-about-possible-string-truncations-a.patch
+Patch0011: 0011-Fix-stringop-overflow-warning.patch
+Patch0012: 0012-Fix-maybe-uninitialized-warning.patch
+Patch0013: 0013-Fix-build-with-rpm-4.16.patch
+
 BuildRequires: gcc
-BuildRequires: glib2-devel
-BuildRequires: libblkid-devel
-BuildRequires: make
-BuildRequires: pkgconfig
-BuildRequires: popt-devel
+BuildRequires: pkgconfig glib2-devel popt-devel 
+BuildRequires: libblkid-devel sed make
+# for make test / getopt:
+BuildRequires: util-linux-ng
 BuildRequires: rpm-devel
 BuildRequires: sed
 %ifarch aarch64 x86_64 %{power64}
@@ -36,7 +52,6 @@ Requires: util-linux
 ExcludeArch: %{ix86}
 Conflicts:	uboot-tools < 2021.01-0.1.rc2
 Obsoletes:	%{name}-bls < %{version}-%{release}
-Obsoletes:	%{name}-deprecated < %{version}-%{release}
 
 %description
 This package provides a grubby compatibility script that manages
@@ -44,26 +59,32 @@ BootLoaderSpec files and is meant to be backward compatible with
 the previous grubby tool.
 
 %prep
-# Make sure the license can be found in mock
-cp %{SOURCE3} . || true
+%autosetup -p1 -n grubby-%{version}-1
 
 %build
 %set_build_flags
-gcc ${CPPFLAGS} ${CFLAGS} ${LDFLAGS} -std=gnu99 -DVERSION='"8.4.0"' \
-    -o rpm-sort %{SOURCE2} -lrpmio
+%make_build LDFLAGS="${LDFLAGS}"
+
+%ifnarch aarch64 %{arm}
+%check
+make test
+%endif
 
 %install
-mkdir -p %{buildroot}%{_libexecdir}/grubby/
-install -D -m 0755 rpm-sort %{buildroot}%{_libexecdir}/grubby
+make install DESTDIR=$RPM_BUILD_ROOT mandir=%{_mandir} sbindir=%{_sbindir} libexecdir=%{_libexecdir}
 
-mkdir -p %{buildroot}%{_sbindir}/
-install -T -m 0755 %{SOURCE1} %{buildroot}%{_sbindir}/grubby
-install -T -m 0755 %{SOURCE4} %{buildroot}%{_sbindir}/installkernel
-
+mkdir -p %{buildroot}%{_libexecdir}/{grubby,installkernel}/ %{buildroot}%{_sbindir}/
+mv -v %{buildroot}%{_sbindir}/grubby %{buildroot}%{_libexecdir}/grubby/grubby
+mv -v %{buildroot}%{_sbindir}/installkernel %{buildroot}%{_libexecdir}/installkernel/installkernel
+install -m 0755 %{SOURCE1} %{buildroot}%{_libexecdir}/grubby/
+install -m 0755 %{SOURCE4} %{buildroot}%{_libexecdir}/installkernel/
+sed -e "s,@@LIBEXECDIR@@,%{_libexecdir}/grubby,g" %{SOURCE2} \
+	> %{buildroot}%{_sbindir}/grubby
+sed -e "s,@@LIBEXECDIR@@,%{_libexecdir}/installkernel,g" %{SOURCE3} \
+	> %{buildroot}%{_sbindir}/installkernel
 install -D -m 0755 -t %{buildroot}%{_prefix}/lib/kernel/install.d/ %{SOURCE5}
 install -D -m 0755 -t %{buildroot}%{_prefix}/lib/kernel/install.d/ %{SOURCE6}
-
-mkdir -p %{buildroot}%{_mandir}/man8
+rm %{buildroot}%{_mandir}/man8/grubby.8*
 install -m 0644 %{SOURCE7} %{buildroot}%{_mandir}/man8/
 
 %post
@@ -73,17 +94,48 @@ if [ "$1" = 2 ]; then
     zipl-switch-to-blscfg --backup-suffix=.rpmsave &>/dev/null || :
 fi
 
+%package deprecated
+Summary:	Legacy command line tool for updating bootloader configs
+Conflicts:	%{name} <= 8.40-18
+
+%description deprecated
+This package provides deprecated, legacy grubby.  This is for temporary
+compatibility only.
+
+grubby is a command line tool for updating and displaying information about
+the configuration files for the grub, lilo, elilo (ia64), yaboot (powerpc)
+and zipl (s390) boot loaders. It is primarily designed to be used from
+scripts which install new kernels and need to find information about the
+current boot environment.
+
 %files
 %license COPYING
 %dir %{_libexecdir}/grubby
+%dir %{_libexecdir}/installkernel
+%attr(0755,root,root) %{_libexecdir}/grubby/grubby-bls
 %attr(0755,root,root) %{_libexecdir}/grubby/rpm-sort
 %attr(0755,root,root) %{_sbindir}/grubby
+%attr(0755,root,root) %{_libexecdir}/installkernel/installkernel-bls
 %attr(0755,root,root) %{_sbindir}/installkernel
 %attr(0755,root,root) %{_prefix}/lib/kernel/install.d/10-devicetree.install
 %attr(0755,root,root) %{_prefix}/lib/kernel/install.d/95-kernel-hooks.install
-%{_mandir}/man8/grubby.8*
+%{_mandir}/man8/[gi]*.8*
+
+%files deprecated
+%license COPYING
+%dir %{_libexecdir}/grubby
+%dir %{_libexecdir}/installkernel
+%attr(0755,root,root) %{_libexecdir}/grubby/grubby
+%attr(0755,root,root) %{_libexecdir}/installkernel/installkernel
+%attr(0755,root,root) %{_sbindir}/grubby
+%attr(0755,root,root) %{_sbindir}/installkernel
+%attr(0755,root,root) %{_sbindir}/new-kernel-pkg
+%{_mandir}/man8/*.8*
 
 %changelog
+* Thu Aug 18 2022 Robbie Harwood <rharwood@redhat.com> - 8.40-66
+- Bring back -deprecated for fedora 36
+
 * Wed Aug 17 2022 Robbie Harwood <rharwood@redhat.com> - 8.40-65
 - Mark package as obsoleting -deprecated
 - Resolves: #2117817

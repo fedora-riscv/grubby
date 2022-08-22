@@ -1,6 +1,6 @@
 Name: grubby
 Version: 8.40
-Release: 66%{?dist}
+Release: 67%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 URL: https://github.com/rhinstaller/grubby
@@ -133,6 +133,10 @@ current boot environment.
 %{_mandir}/man8/*.8*
 
 %changelog
+* Mon Aug 22 2022 Robbie Harwood <rharwood@redhat.com> - 8.40-67
+- Give up and just pull the config from BLS
+- Suggested-by: Bojan Smojver <bojan@rexursive.com>
+
 * Thu Aug 18 2022 Robbie Harwood <rharwood@redhat.com> - 8.40-66
 - Bring back -deprecated for fedora 36
 

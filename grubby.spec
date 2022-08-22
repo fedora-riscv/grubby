@@ -3,7 +3,7 @@
 
 Name: grubby
 Version: 8.40
-Release: 65%{?dist}
+Release: 66%{?dist}
 Summary: Command line tool for updating bootloader configs
 License: GPLv2+
 Source1: grubby-bls
@@ -84,6 +84,10 @@ fi
 %{_mandir}/man8/grubby.8*
 
 %changelog
+* Mon Aug 22 2022 Robbie Harwood <rharwood@redhat.com> - 8.40-66
+- Give up and just pull the config from BLS
+- Suggested-by: Bojan Smojver <bojan@rexursive.com>
+
 * Wed Aug 17 2022 Robbie Harwood <rharwood@redhat.com> - 8.40-65
 - Mark package as obsoleting -deprecated
 - Resolves: #2117817

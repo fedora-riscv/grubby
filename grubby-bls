@@ -502,16 +502,6 @@ update_bls_fragment() {
                 opts="$(echo "$opts" | sed -e 's/\//\\\//g')"
                 sed -i -e "s/^GRUB_CMDLINE_LINUX.*/GRUB_CMDLINE_LINUX=\\\"${opts}\\\"/" "${grub_etc_default}"
             fi
-
-	    if [[ -f /etc/kernel/cmdline ]]; then
-		sed -i "s/\(root=[^ ]*\) .*/\1 ${opts}/" /etc/kernel/cmdline
-	    else
-		# grub2-mkconfig creates this.  Do that now.
-		grub2-mkconfig -o /etc/grub2.cfg
-	    fi
-	    if [[ ! -f /etc/kernel/cmdline ]]; then
-		echo "No /etc/kernel/cmdline; please report a bug";
-	    fi
         fi
 
         old_args="$(grub2-editenv "${env}" list | grep kernelopts | sed -e "s/kernelopts=//")"
@@ -538,7 +528,7 @@ update_bls_fragment() {
 	fi
     done
 
-    if [[ $param = "ALL" && $bootloader = zipl ]] && [[ -n $remove_args || -n $add_args ]]; then
+    if [[ $param = "ALL" ]] && [[ -n $remove_args || -n $add_args ]]; then
 	if [[ ! -f /etc/kernel/cmdline ]]; then
 	    # anaconda could pre-populate this file, but until then, most of
 	    # the time we'll just want the most recent one.  This is pretty

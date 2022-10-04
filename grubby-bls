@@ -827,13 +827,12 @@ fi
 remove_var_prefix "$(get_prefix)"
 
 if [[ -n $kernel ]]; then
-    if [[ $copy_default = "true" ]]; then
-	opts="${bls_options[$default_index]}"
-	if [[ -n $args ]]; then
-	    opts="${opts} ${args}"
-	fi
-    else
-	opts="${args}"
+    opts="${bls_options[$default_index]}"
+    if [[ $copy_default != "true" ]]; then
+        opts=$(echo $opts | sed -e 's/ .*//')
+    fi
+    if [[ -n $args ]]; then
+        opts="${opts} ${args}"
     fi
 
     add_bls_fragment "${kernel}" "${title}" "${opts}" "${initrd}" \

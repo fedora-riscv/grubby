@@ -30,6 +30,7 @@ Patch0010: 0010-Fix-GCC-warnings-about-possible-string-truncations-a.patch
 Patch0011: 0011-Fix-stringop-overflow-warning.patch
 Patch0012: 0012-Fix-maybe-uninitialized-warning.patch
 Patch0013: 0013-Fix-build-with-rpm-4.16.patch
+Patch0014: 0014-rpm-sort.c-fix-build-warnings-incompatible-implicit-.patch
 
 BuildRequires: gcc
 BuildRequires: pkgconfig glib2-devel popt-devel 
@@ -136,6 +137,8 @@ current boot environment.
 * Mon Aug 22 2022 Robbie Harwood <rharwood@redhat.com> - 8.40-67
 - Give up and just pull the config from BLS
 - Suggested-by: Bojan Smojver <bojan@rexursive.com>
+- fix build warnings "incompatible implicit declaration of
+  built-in function"
 
 * Thu Aug 18 2022 Robbie Harwood <rharwood@redhat.com> - 8.40-66
 - Bring back -deprecated for fedora 36

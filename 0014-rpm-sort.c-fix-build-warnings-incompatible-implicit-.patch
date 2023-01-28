@@ -1,0 +1,25 @@
+From 254bfc0269390aefae44ba65951c3387e3f2faad Mon Sep 17 00:00:00 2001
+From: Wei Fu <wefu@redhat.com>
+Date: Sat, 28 Jan 2023 13:57:58 -0500
+Subject: [PATCH] rpm-sort.c: fix build warnings "incompatible implicit
+ declaration of built-in function"
+
+---
+ rpm-sort.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/rpm-sort.c b/rpm-sort.c
+index f196356..334285b 100644
+--- a/rpm-sort.c
++++ b/rpm-sort.c
+@@ -2,6 +2,7 @@
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <string.h>
+ #include <unistd.h>
+ #include <errno.h>
+ #include <assert.h>
+-- 
+2.38.1
+
